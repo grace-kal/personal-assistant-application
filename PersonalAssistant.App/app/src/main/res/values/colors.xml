@@ -21,4 +21,6 @@
     <color name="neutral_darker_698DB7">#698DB7</color>
     <color name="deep_sea_2A5689">#2A5689</color>
     <color name="midnight_284261">#284261</color>
+    <!--Transparent colors-->
+    <color name="transparent80_whisper_lighter_D5E6FA">#CDD5E6FA</color>
 </resources>
