@@ -8,18 +8,60 @@
     <fragment
         android:id="@+id/nav_home"
         android:name="com.example.personalassistantapp.ui.home.HomeFragment"
-        android:label="@string/menu_home"
+        android:label="@string/menu_overview"
         tools:layout="@layout/fragment_home" />
 
-    <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.personalassistantapp.ui.gallery.GalleryFragment"
-        android:label="@string/menu_gallery"
-        tools:layout="@layout/fragment_gallery" />
+    <!--    <fragment-->
+    <!--        android:id="@+id/nav_gallery"-->
+    <!--        android:name="com.example.personalassistantapp.ui.gallery.GalleryFragment"-->
+    <!--        android:label="@string/menu_gallery"-->
+    <!--        tools:layout="@layout/fragment_gallery" />-->
+
+    <!--    <fragment-->
+    <!--        android:id="@+id/nav_slideshow"-->
+    <!--        android:name="com.example.personalassistantapp.ui.slideshow.SlideshowFragment"-->
+    <!--        android:label="@string/menu_slideshow"-->
+    <!--        tools:layout="@layout/fragment_slideshow" />-->
 
     <fragment
-        android:id="@+id/nav_slideshow"
+        android:id="@+id/nav_events"
         android:name="com.example.personalassistantapp.ui.slideshow.SlideshowFragment"
-        android:label="@string/menu_slideshow"
+        android:label="@string/menu_events"
+        tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/nav_tasks"
+        android:name="com.example.personalassistantapp.ui.slideshow.SlideshowFragment"
+        android:label="@string/menu_tasks"
+        tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/nav_notes"
+        android:name="com.example.personalassistantapp.ui.slideshow.SlideshowFragment"
+        android:label="@string/menu_notes"
+        tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/nav_schedules"
+        android:name="com.example.personalassistantapp.ui.slideshow.SlideshowFragment"
+        android:label="@string/menu_schedules"
+        tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/nav_wardrobe"
+        android:name="com.example.personalassistantapp.ui.slideshow.SlideshowFragment"
+        android:label="@string/menu_wardrobe"
+        tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/nav_news"
+        android:name="com.example.personalassistantapp.ui.slideshow.SlideshowFragment"
+        android:label="@string/menu_news"
+        tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/nav_contact_support"
+        android:name="com.example.personalassistantapp.ui.slideshow.SlideshowFragment"
+        android:label="@string/menu_contact_support"
         tools:layout="@layout/fragment_slideshow" />
 </navigation>

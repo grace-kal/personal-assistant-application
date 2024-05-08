@@ -5,6 +5,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/whisper_lighter_D5E6FA"
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
@@ -19,7 +20,23 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
+        android:background="@color/whisper_lighter_D5E6FA"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
-        app:menu="@menu/activity_main_drawer" />
+        app:insetForeground="@color/midnight_284261"
+        app:itemIconTint="@color/midnight_284261"
+        app:itemTextColor="@color/midnight_284261"
+        app:menu="@menu/activity_main_drawer" >
+
+        <ImageView
+            android:id="@+id/menu_avatar_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom"
+            android:baselineAlignBottom="false"
+            android:contentDescription="@string/menu_avatar_image_description"
+            android:longClickable="false"
+            app:srcCompat="@drawable/ic_launcher_foreground"
+            tools:srcCompat="@drawable/ic_launcher_foreground" />
+    </com.google.android.material.navigation.NavigationView>
 </androidx.drawerlayout.widget.DrawerLayout>
