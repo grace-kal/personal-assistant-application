@@ -1,6 +1,9 @@
-package com.example.personalassistantapp.models
+import lombok.Getter
+import lombok.Setter
 
-class User {
+@Getter
+@Setter
+class UserKotlinExample {
     private val id = 0
     private val username: String? = null
     private val email: String? = null

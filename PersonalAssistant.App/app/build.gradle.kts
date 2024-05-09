@@ -1,6 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+//    kotlin("plugin.lombok") version "1.8.10"
+//    id("io.freefair.lombok") version "5.3.0"
+//    id ("org.jetbrains.kotlin.plugin.lombok") version "1.8.0"
 }
 
 android {
@@ -45,7 +48,11 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+//    Lombok
+    implementation(libs.lombok.v11830)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+//    Lombok
+    annotationProcessor (libs.projectlombok.lombok)
 }
