@@ -28,15 +28,30 @@
         app:menu="@menu/activity_main_drawer">
 
         <ImageView
-            android:id="@+id/menu_avatar_image"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:id="@+id/menu_avatar_settings_icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="bottom"
-            android:layout_margin="14dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginBottom="14dp"
             android:baselineAlignBottom="false"
             android:contentDescription="@string/menu_avatar_image_description"
             android:longClickable="false"
-            app:srcCompat="@drawable/ic_launcher_foreground"
-            tools:srcCompat="@drawable/ic_launcher_foreground" />
+            app:srcCompat="@drawable/ic_menu_settings"
+            tools:srcCompat="@drawable/ic_menu_settings" />
+
+        <ImageView
+            android:id="@+id/menu_avatar_logout_btn"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="bottom"
+            android:layout_marginStart="60dp"
+            android:layout_marginBottom="14dp"
+            android:baselineAlignBottom="false"
+            android:contentDescription="@string/menu_logout_btn"
+            android:longClickable="false"
+            app:srcCompat="@drawable/ic_menu_logout"
+            tools:srcCompat="@drawable/ic_menu_logout" />
+
     </com.google.android.material.navigation.NavigationView>
 </androidx.drawerlayout.widget.DrawerLayout>
