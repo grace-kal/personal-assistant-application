@@ -22,4 +22,12 @@
     <string name="menu_avatar_image_description">Your account</string>
     <string name="floating_button_description">Contact support</string>
     <string name="menu_logout_btn">Logout</string>
+    <string name="username_hint">Username</string>
+    <string name="email_address_hint">Email address</string>
+    <string name="password_hint">Password</string>
+    <string name="repeat_password_hint">Repeat password</string>
+    <string name="register_btn_text">Register</string>
+    <string name="cancel_btn_text">Cancel</string>
+    <string name="first_name_hint">First name</string>
+    <string name="last_name_hint">Last name</string>
 </resources>
