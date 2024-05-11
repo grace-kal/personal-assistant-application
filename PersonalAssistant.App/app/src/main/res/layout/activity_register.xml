@@ -8,7 +8,6 @@
     android:background="@drawable/content_page_gradient_drawable"
     tools:context=".RegisterActivity">
 
-
     <ImageView
         android:id="@+id/avatar_register_page"
         android:layout_width="wrap_content"
@@ -18,8 +17,8 @@
         android:contentDescription="@string/menu_avatar_image_description"
         app:layout_constraintBottom_toTopOf="@+id/registerUsernameEditText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_launcher_foreground" />
 
     <EditText
@@ -102,6 +101,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="30dp"
+        android:popupBackground="@color/transparent80_whisper_lighter_D5E6FA"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/registerLastNameEditText" />
@@ -113,6 +113,7 @@
         android:layout_marginStart="30dp"
         android:layout_marginTop="30dp"
         android:layout_marginEnd="30dp"
+        android:popupBackground="@color/transparent80_whisper_lighter_D5E6FA"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/country_spinner" />
@@ -178,6 +179,5 @@
         android:textColor="@color/whisper_lighter_D5E6FA"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/registerRepeatPasswordEditText" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

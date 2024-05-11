@@ -8,12 +8,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class User implements Serializable {
-    private int id;
-    private String username;
-    private String firstName;
-    private String lastName;
-    private String email;
-    private String password;
-    private String country;
-    private String city;
+    public int id;
+    public String username;
+    public String firstName;
+    public String lastName;
+    public String email;
+    public String password;
+    public String country;
+    public String city;
 }
