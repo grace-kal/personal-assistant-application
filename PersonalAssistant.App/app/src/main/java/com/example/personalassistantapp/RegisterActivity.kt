@@ -1,8 +1,7 @@
 package com.example.personalassistantapp
 
-import android.app.ProgressDialog
-import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -15,19 +14,21 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.personalassistantapp.helpers.ApiRequestHelper
 import com.example.personalassistantapp.models.User
-import org.json.JSONException
-import org.json.JSONObject
-import java.io.BufferedInputStream
-import java.io.BufferedReader
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
 import java.io.IOException
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
 import java.util.Locale
 
 
 class RegisterActivity : AppCompatActivity(),
     AdapterView.OnItemSelectedListener {
+
+    private val client = OkHttpClient()
 
     //  View items
     private var usernameET: EditText? = null
@@ -91,7 +92,7 @@ class RegisterActivity : AppCompatActivity(),
     }
 
     fun onClick(view: View) {
-        if (view.getId() == R.id.registerOkBtn) {
+        if (view.id == R.id.registerOkBtn) {
             if (usernameET?.text.toString().isEmpty()
                 || emailET?.text.toString().isEmpty()
                 || passwordET?.text.toString().isEmpty()
@@ -108,14 +109,42 @@ class RegisterActivity : AppCompatActivity(),
             val user = User()
             user.username = usernameET?.text.toString()
             user.email = emailET?.text.toString()
-            user.firstName=firstNameET?.text.toString()
-            user.lastName=lastNameET?.text.toString()
-            user.country=selectedCountry
+            user.firstName = firstNameET?.text.toString()
+            user.lastName = lastNameET?.text.toString()
+            user.country = selectedCountry
             user.city = "implement"
             user.password = passwordET?.text.toString()
 
-            val registerAsyncTask = RegisterAsyncTask(user)
-            registerAsyncTask.execute()
+            registerUserApiRequest(user)
+        }
+    }
+
+    private fun registerUserApiRequest(user: User) {
+
+        var host = ApiRequestHelper.HOSTADDRESS
+        var controller = ApiRequestHelper.USERCONTROLLER
+
+//        var url = host + controller
+        var urlString = "http://localhost:5239/api/User/GetRegister?username=lala"
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val request = Request.Builder().url(urlString).build()
+                val response: Response = client.newCall(request).execute()
+                val responseData = response.body?.string()
+
+                // Switch to Main dispatcher to update UI
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful && responseData != null) {
+                        // Handle the API response here (e.g., update UI)
+                        Log.d("FetchApiData", "Response: $responseData")
+                    } else {
+                        Log.e("FetchApiData", "Error response code: ${response.code}")
+                    }
+                }
+            } catch (e: IOException) {
+                Log.e("FetchApiData", "Exception: ${e.message}")
+            }
         }
     }
 
@@ -139,72 +168,72 @@ class RegisterActivity : AppCompatActivity(),
         TODO("Not yet implemented")
     }
 
-    private inner class RegisterAsyncTask(private val user: User) : AsyncTask<Void, Void, Void>() {
-        private var isSuccessful: Boolean = false
-        private val dialog = ProgressDialog(this@RegisterActivity)
-        private var error: String? = null
-
-        override fun onPreExecute() {
-            dialog.setTitle("Registering process is going...")
-            dialog.show()
-        }
-
-        override fun doInBackground(vararg voids: Void?): Void? {
-            val urlString = String.format(
-                "%s/User/GetRegister?username=%s",
-                ApiRequestHelper.ADDRESS, user.username
-            )
-
-            var urlConnection: HttpURLConnection? = null
-
-            try {
-                val url = URL(urlString)
-                urlConnection = url.openConnection() as HttpURLConnection
-
-                val stream = BufferedInputStream(urlConnection.inputStream)
-                val reader = BufferedReader(InputStreamReader(stream))
-
-                val result = reader.readLine()
-
-//                if (result != null) {
-//                    val jsonOb = JSONObject(result)
+//    private inner class RegisterAsyncTask(private val user: User) : AsyncTask<Void, Void, Void>() {
+//        private var isSuccessful: Boolean = false
+//        private val dialog = ProgressDialog(this@RegisterActivity)
+//        private var error: String? = null
 //
-//                    if (jsonOb.getBoolean("Success")) {
-//                        isSuccessful = true
-//                    } else {
-//                        error = jsonOb.getString("Message")
-//                    }
-//                } else {
-//                    error = "There was no response!"
-//                }
-            } catch (e: IOException) {
-                error = e.message
-                throw RuntimeException(e)
-            } catch (e: JSONException) {
-                error = e.message
-                throw RuntimeException(e)
-            } finally {
-                urlConnection?.disconnect()
-            }
-
-            return null
-        }
-
-        override fun onPostExecute(unused: Void?) {
-           dialog.hide()
+//        override fun onPreExecute() {
+//            dialog.setTitle("Registering process is going...")
+//            dialog.show()
+//        }
 //
-//            if (isSuccessful) {
-//                val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
-//                intent.putExtra("newUser", true)
-//                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
-//                startActivity(intent)
-//            } else {
-//                Toast.makeText(
-//                    this@RegisterActivity,
-//                    "Register was not successful $error", Toast.LENGTH_SHORT
-//                ).show()
+//        override fun doInBackground(vararg voids: Void?): Void? {
+//            val urlString = String.format(
+//                "%s/User/GetRegister?username=%s",
+//                ApiRequestHelper.HOSTADDRESS, user.username
+//            )
+//
+//            var urlConnection: HttpURLConnection? = null
+//
+//            try {
+//                val url = URL(urlString)
+//                urlConnection = url.openConnection() as HttpURLConnection
+//
+//                val stream = BufferedInputStream(urlConnection.inputStream)
+//                val reader = BufferedReader(InputStreamReader(stream))
+//
+//                val result = reader.readLine()
+//
+////                if (result != null) {
+////                    val jsonOb = JSONObject(result)
+////
+////                    if (jsonOb.getBoolean("Success")) {
+////                        isSuccessful = true
+////                    } else {
+////                        error = jsonOb.getString("Message")
+////                    }
+////                } else {
+////                    error = "There was no response!"
+////                }
+//            } catch (e: IOException) {
+//                error = e.message
+//                throw RuntimeException(e)
+//            } catch (e: JSONException) {
+//                error = e.message
+//                throw RuntimeException(e)
+//            } finally {
+//                urlConnection?.disconnect()
 //            }
-        }
-    }
+//
+//            return null
+//        }
+//
+//        override fun onPostExecute(unused: Void?) {
+//           dialog.hide()
+////
+////            if (isSuccessful) {
+////                val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
+////                intent.putExtra("newUser", true)
+////                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP
+////                startActivity(intent)
+////            } else {
+////                Toast.makeText(
+////                    this@RegisterActivity,
+////                    "Register was not successful $error", Toast.LENGTH_SHORT
+////                ).show()
+////            }
+//        }
+//    }
 
 }

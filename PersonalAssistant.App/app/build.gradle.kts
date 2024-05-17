@@ -51,9 +51,12 @@ dependencies {
 //    Lombok
     implementation(libs.lombok.v11830)
     implementation(libs.androidx.activity)
+    runtimeOnly(libs.kotlinx.coroutines.android)
+    implementation(libs.okhttp)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 //    Lombok
     annotationProcessor (libs.projectlombok.lombok)
+
 }
