@@ -13,13 +13,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.personalassistantapp.helpers.ApiRequestHelper
+import com.example.personalassistantapp.helpers.HashHelper
 import com.example.personalassistantapp.models.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import java.io.IOException
 import java.util.Locale
@@ -120,12 +124,28 @@ class RegisterActivity : AppCompatActivity(),
     }
 
     private fun registerUserApiRequest(user: User) {
+        var urlString =
+            ApiRequestHelper.HOSTADDRESS + ApiRequestHelper.USERCONTROLLER + ApiRequestHelper.REGISTER_USERCONTROLLER
 
-        var urlString = "http://10.0.2.2:5239/api/User/GetRegister?username=lala"
+        val jsonMediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
+
+        // Example JSON data
+        val jsonBody = """
+            {
+                "username": "${user.username}",
+                "password": "${HashHelper.hashString(user.password)}"
+            }
+        """.trimIndent()
+
+        val requestBody: RequestBody = jsonBody.toRequestBody(jsonMediaType)
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val request = Request.Builder().url(urlString).build()
+                val request = Request
+                    .Builder()
+                    .url(urlString)
+                    .post(requestBody)
+                    .build()
                 val response: Response = client.newCall(request).execute()
                 val responseData = response.body?.string()
 
