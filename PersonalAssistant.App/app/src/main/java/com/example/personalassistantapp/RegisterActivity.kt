@@ -25,6 +25,7 @@ import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
+import org.json.JSONArray
 import java.io.IOException
 import java.util.Locale
 
@@ -103,7 +104,7 @@ class RegisterActivity : AppCompatActivity(),
             user.firstName = firstNameET?.text.toString()
             user.lastName = lastNameET?.text.toString()
             user.country = selectedCountry
-            user.city = "implement"
+            user.city = selectedCity
             user.password = passwordET?.text.toString()
 
             registerUserApiRequest(user)
@@ -167,7 +168,7 @@ class RegisterActivity : AppCompatActivity(),
             selectedCountry = countriesList[position]
             loadCitiesForCountry(countriesList[position])
         } else if (parent?.id == R.id.city_spinner) {
-
+            selectedCity = citiesList[position]
         }
     }
 
@@ -203,13 +204,12 @@ class RegisterActivity : AppCompatActivity(),
                     .url(url)
                     .build()
                 val response: Response = client.newCall(request).execute()
-                val responseData = response.body?.string()
 
-                // Switch to Main dispatcher to update UI
                 withContext(Dispatchers.Main) {
-                    if (response.isSuccessful && responseData != null) {
-                        // Handle the API response here (e.g., update UI)
-                        Log.d("FetchApiData", "Response from cities: $responseData")
+                    if (response.isSuccessful) {
+                        response.body?.string()?.let { jsonString ->
+                            parseJsonToMutableList(jsonString)
+                        }
                     } else {
                         Log.e("FetchApiData", "Error response code: ${response.code}")
                     }
@@ -217,6 +217,14 @@ class RegisterActivity : AppCompatActivity(),
             } catch (e: IOException) {
                 Log.e("FetchApiData", "Exception: ${e.message}")
             }
+        }
+    }
+
+    private fun parseJsonToMutableList(jsonString: String) {
+        val jsonArray = JSONArray(jsonString)
+        for (i in 0 until jsonArray.length()) {
+            val city = jsonArray.getString(i)
+            citiesList.add(city)
         }
     }
 }
