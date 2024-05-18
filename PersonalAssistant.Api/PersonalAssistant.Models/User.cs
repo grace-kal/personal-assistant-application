@@ -21,7 +21,7 @@ namespace PersonalAssistant.Models
         [Required]
         public required string City { get; set; }
 
-        public required string Address { get; set; }
+        public string? Address { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

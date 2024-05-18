@@ -9,7 +9,7 @@ namespace PersonalAssistant.Api.Controllers
     public class UserController : ControllerBase
     {
         [HttpPost("Register")]
-        public async Task<ActionResult<bool>> Register([FromBody] LoginUser user)
+        public async Task<ActionResult<bool>> Register([FromBody] RegisterUserVm user)
         {
             if (!user.Username.IsNullOrEmpty())
                 return true;

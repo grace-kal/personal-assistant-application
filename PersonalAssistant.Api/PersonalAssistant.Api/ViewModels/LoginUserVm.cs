@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace PersonalAssistant.Api.ViewModels
 {
-    public class LoginUser
+    public class LoginUserVm
     {
         [JsonPropertyName("username")]
         public required string Username { get; set; }

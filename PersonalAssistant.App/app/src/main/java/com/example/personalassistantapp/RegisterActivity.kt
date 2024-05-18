@@ -45,6 +45,7 @@ class RegisterActivity : AppCompatActivity(),
     private lateinit var citiesSpinner: Spinner
 
     //    Class variables
+    var countriesWithCodes: MutableMap<String,String> = mutableMapOf()
     var countriesList: MutableList<String> = mutableListOf()
     var citiesList: MutableList<String> = mutableListOf()
     var selectedCountry: String? = null
@@ -76,23 +77,9 @@ class RegisterActivity : AppCompatActivity(),
         for (countryCode: String? in countryCodes) {
             val obj = Locale("", countryCode)
             countriesList.add(obj.displayCountry)
-            println(
-                "Country Code = " + obj.country
-                        + ", Country Name = " + obj.displayCountry
-            )
+            countriesWithCodes[obj.displayCountry] = obj.country
         }
-
-        countriesSpinner.onItemSelectedListener = this
-        //Creating the ArrayAdapter instance
-        val aa: ArrayAdapter<*> =
-            ArrayAdapter<Any?>(
-                this, android.R.layout.simple_spinner_item,
-                countriesList as List<Any?>
-            )
-        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-
-        //Setting the ArrayAdapter data on the Spinner
-        countriesSpinner.setAdapter(aa)
+        loadCountries();
     }
 
     fun onClick(view: View) {
@@ -133,7 +120,12 @@ class RegisterActivity : AppCompatActivity(),
         val jsonBody = """
             {
                 "username": "${user.username}",
-                "password": "${HashHelper.hashString(user.password)}"
+                "password": "${HashHelper.hashString(user.password)}",
+                "email":"${user.email}",
+                "firstName":"${user.firstName}",
+                "lastName":"${user.lastName}",
+                "country":"${user.country}",
+                "city":"${user.city}",
             }
         """.trimIndent()
 
@@ -167,20 +159,57 @@ class RegisterActivity : AppCompatActivity(),
     //    Spinner methods
     override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
 //        Toast.makeText(applicationContext, countriesList[position], Toast.LENGTH_LONG).show();
-        selectedCountry = countriesList[position]
+        if (parent?.id == R.id.country_spinner) {
+            selectedCountry = countriesList[position]
+            loadCitiesForCountry(countriesList[position])
+        } else if (parent?.id == R.id.city_spinner) {
 
-////        Cities to display
-//        citiesList.add("Implement")
-//        citiesSpinner.onItemSelectedListener = this
-//        val aaa: ArrayAdapter<*> =
-//            ArrayAdapter<Any?>(
-//                this, android.R.layout.simple_spinner_item,
-//                citiesList as List<Any?>
-//            )
-//        aaa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        }
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
         TODO("Not yet implemented")
+    }
+
+    private fun loadCountries() {
+        countriesSpinner.onItemSelectedListener = this
+        //Creating the ArrayAdapter instance
+        val aa: ArrayAdapter<*> =
+            ArrayAdapter<Any?>(
+                this, android.R.layout.simple_spinner_item,
+                countriesList as List<Any?>
+            )
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        //Setting the ArrayAdapter data on the Spinner
+        countriesSpinner.setAdapter(aa)
+    }
+
+    private fun loadCitiesForCountry(country: String) {
+//        val countryCode = countriesWithCodes[country]
+//        val url = "https://api.countrystatecity.in/v1/countries/$countryCode/states"
+//
+//        CoroutineScope(Dispatchers.IO).launch {
+//            try {
+//                val request = Request.Builder()
+//                    .url(url)
+//                    .addHeader("X-CSCAPI-KEY", "YOUR_API_KEY")
+//                    .build()
+//                val response: Response = client.newCall(request).execute()
+//                val responseData = response.body?.string()
+//
+//                // Switch to Main dispatcher to update UI
+//                withContext(Dispatchers.Main) {
+//                    if (response.isSuccessful && responseData != null) {
+//                        // Handle the API response here (e.g., update UI)
+//                        Log.d("FetchApiData", "Response: $responseData")
+//                    } else {
+//                        Log.e("FetchApiData", "Error response code: ${response.code}")
+//                    }
+//                }
+//            } catch (e: IOException) {
+//                Log.e("FetchApiData", "Exception: ${e.message}")
+//            }
+//        }
     }
 }
