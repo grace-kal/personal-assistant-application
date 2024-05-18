@@ -8,16 +8,20 @@ public class ApiRequestHelper {
     public static final String EVENTSCONTROLLER = "";
     public static final String TASKSCONTROLLER = "";
     public static final String WARDROBECONTROLLER = "";
+    public static final String WEATHERCONTROLLER = "/Weather";
 
 
     //    User controller methods
-    public static final String REGISTER_USERCONTROLLER = "/Register";
+    public static final String REGISTER_ENDPOINT_USERCONTROLLER = "/Register";
 
-    public String urlBuilder(String controller, String method) {
+//    Weather controller methods
+    public static final String CITIES_FOR_COUNTRY_ENDPOINT_WEATHERCONTROLLER = "/Cities";
+
+    public static String urlBuilder(String controller, String method) {
         return HOSTADDRESS + controller + method;
     }
 
-    public String valuesBuilder(String url, String values) {
+    public static String valuesBuilder(String url, String values) {
         return url + "?" + values;
     }
 }

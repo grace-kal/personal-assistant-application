@@ -45,7 +45,7 @@ class RegisterActivity : AppCompatActivity(),
     private lateinit var citiesSpinner: Spinner
 
     //    Class variables
-    var countriesWithCodes: MutableMap<String,String> = mutableMapOf()
+    var countriesWithCodes: MutableMap<String, String> = mutableMapOf()
     var countriesList: MutableList<String> = mutableListOf()
     var citiesList: MutableList<String> = mutableListOf()
     var selectedCountry: String? = null
@@ -112,20 +112,24 @@ class RegisterActivity : AppCompatActivity(),
 
     private fun registerUserApiRequest(user: User) {
         var urlString =
-            ApiRequestHelper.HOSTADDRESS + ApiRequestHelper.USERCONTROLLER + ApiRequestHelper.REGISTER_USERCONTROLLER
+            ApiRequestHelper.HOSTADDRESS + ApiRequestHelper.USERCONTROLLER + ApiRequestHelper.REGISTER_ENDPOINT_USERCONTROLLER
+//        val urlString = ApiRequestHelper.urlBuilder(
+//            ApiRequestHelper.USERCONTROLLER,
+//            ApiRequestHelper.REGISTER_ENDPOINT_USERCONTROLLER
+//        )
 
         val jsonMediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
 
         // Example JSON data
         val jsonBody = """
             {
-                "username": "${user.username}",
-                "password": "${HashHelper.hashString(user.password)}",
-                "email":"${user.email}",
-                "firstName":"${user.firstName}",
-                "lastName":"${user.lastName}",
-                "country":"${user.country}",
-                "city":"${user.city}",
+              "username": "${user.username}",
+              "email": "${user.email}",
+              "password": "${HashHelper.hashString(user.password)}",
+              "firstName": "${user.firstName}",
+              "lastName": "${user.lastName}",
+              "country": "${user.country}",
+              "city": "${user.city}"
             }
         """.trimIndent()
 
@@ -145,9 +149,9 @@ class RegisterActivity : AppCompatActivity(),
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful && responseData != null) {
                         // Handle the API response here (e.g., update UI)
-                        Log.d("FetchApiData", "Response: $responseData")
+                        Log.d("FetchApiData", "Response from regsiter: $responseData")
                     } else {
-                        Log.e("FetchApiData", "Error response code: ${response.code}")
+                        Log.e("FetchApiData", "Error response code from regidter: ${response.code}")
                     }
                 }
             } catch (e: IOException) {
@@ -186,30 +190,33 @@ class RegisterActivity : AppCompatActivity(),
     }
 
     private fun loadCitiesForCountry(country: String) {
-//        val countryCode = countriesWithCodes[country]
-//        val url = "https://api.countrystatecity.in/v1/countries/$countryCode/states"
-//
-//        CoroutineScope(Dispatchers.IO).launch {
-//            try {
-//                val request = Request.Builder()
-//                    .url(url)
-//                    .addHeader("X-CSCAPI-KEY", "YOUR_API_KEY")
-//                    .build()
-//                val response: Response = client.newCall(request).execute()
-//                val responseData = response.body?.string()
-//
-//                // Switch to Main dispatcher to update UI
-//                withContext(Dispatchers.Main) {
-//                    if (response.isSuccessful && responseData != null) {
-//                        // Handle the API response here (e.g., update UI)
-//                        Log.d("FetchApiData", "Response: $responseData")
-//                    } else {
-//                        Log.e("FetchApiData", "Error response code: ${response.code}")
-//                    }
-//                }
-//            } catch (e: IOException) {
-//                Log.e("FetchApiData", "Exception: ${e.message}")
-//            }
-//        }
+        val countryCode = countriesWithCodes[country]
+        val baseUrl = ApiRequestHelper.urlBuilder(
+            ApiRequestHelper.WEATHERCONTROLLER,
+            ApiRequestHelper.CITIES_FOR_COUNTRY_ENDPOINT_WEATHERCONTROLLER
+        )
+        val url = ApiRequestHelper.valuesBuilder(baseUrl, "countryCode=${countryCode}")
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val request = Request.Builder()
+                    .url(url)
+                    .build()
+                val response: Response = client.newCall(request).execute()
+                val responseData = response.body?.string()
+
+                // Switch to Main dispatcher to update UI
+                withContext(Dispatchers.Main) {
+                    if (response.isSuccessful && responseData != null) {
+                        // Handle the API response here (e.g., update UI)
+                        Log.d("FetchApiData", "Response from cities: $responseData")
+                    } else {
+                        Log.e("FetchApiData", "Error response code: ${response.code}")
+                    }
+                }
+            } catch (e: IOException) {
+                Log.e("FetchApiData", "Exception: ${e.message}")
+            }
+        }
     }
 }
