@@ -12,6 +12,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import com.example.personalassistantapp.helpers.ApiRequestHelper
 import com.example.personalassistantapp.helpers.HashHelper
 import com.example.personalassistantapp.models.User
@@ -136,7 +137,7 @@ class RegisterActivity : AppCompatActivity(),
 
         val requestBody: RequestBody = jsonBody.toRequestBody(jsonMediaType)
 
-        CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val request = Request
                     .Builder()
@@ -198,17 +199,18 @@ class RegisterActivity : AppCompatActivity(),
         )
         val url = ApiRequestHelper.valuesBuilder(baseUrl, "countryCode=${countryCode}")
 
-        CoroutineScope(Dispatchers.IO).launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             try {
                 val request = Request.Builder()
                     .url(url)
                     .build()
                 val response: Response = client.newCall(request).execute()
 
-                withContext(Dispatchers.Main) {
+                withContext(Dispatchers.IO) {
                     if (response.isSuccessful) {
                         response.body?.string()?.let { jsonString ->
                             parseJsonToMutableList(jsonString)
+                            setAdapterForCitiesSpinner()
                         }
                     } else {
                         Log.e("FetchApiData", "Error response code: ${response.code}")
@@ -220,8 +222,23 @@ class RegisterActivity : AppCompatActivity(),
         }
     }
 
+    private fun setAdapterForCitiesSpinner() {
+        citiesSpinner.onItemSelectedListener = this
+        //Creating the ArrayAdapter instance
+        val aa: ArrayAdapter<*> =
+            ArrayAdapter<Any?>(
+                this, android.R.layout.simple_spinner_item,
+                citiesList as List<Any?>
+            )
+        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        //Setting the ArrayAdapter data on the Spinner
+        citiesSpinner.setAdapter(aa)
+    }
+
     private fun parseJsonToMutableList(jsonString: String) {
         val jsonArray = JSONArray(jsonString)
+        citiesList.clear()
         for (i in 0 until jsonArray.length()) {
             val city = jsonArray.getString(i)
             citiesList.add(city)
