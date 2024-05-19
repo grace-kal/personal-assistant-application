@@ -5,7 +5,7 @@ namespace PersonalAssistant.Api.ViewModels
     public class RegisterUserVm
     {
         [JsonPropertyName("username")]
-        public required string Username { get; set; }
+        public required string UserName { get; set; }
 
         [JsonPropertyName("email")]
         public required string Email { get; set; }
