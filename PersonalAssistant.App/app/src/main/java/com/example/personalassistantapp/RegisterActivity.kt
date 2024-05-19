@@ -1,5 +1,6 @@
 package com.example.personalassistantapp
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -16,9 +17,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.personalassistantapp.helpers.ApiRequestHelper
 import com.example.personalassistantapp.helpers.HashHelper
 import com.example.personalassistantapp.models.User
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -143,8 +142,8 @@ class RegisterActivity : AppCompatActivity(),
                 // Switch to Main dispatcher to update UI
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful && responseData != null) {
-                        // Handle the API response here (e.g., update UI)
-                        Log.d("FetchApiData", "Response from regsiter: $responseData")
+                        val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
+                        startActivity(intent)
                     } else {
                         Log.e("FetchApiData", "Error response code from regidter: ${response.code}")
                     }
