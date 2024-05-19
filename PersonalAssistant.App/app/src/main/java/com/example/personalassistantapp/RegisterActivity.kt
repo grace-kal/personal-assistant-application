@@ -18,6 +18,7 @@ import com.example.personalassistantapp.helpers.HashHelper
 import com.example.personalassistantapp.models.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -73,14 +74,6 @@ class RegisterActivity : AppCompatActivity(),
         countriesSpinner = findViewById(R.id.country_spinner)
         citiesSpinner = findViewById(R.id.city_spinner)
 
-//      Settings the countries for the spinner
-        val countryCodes = Locale.getISOCountries()
-
-        for (countryCode: String? in countryCodes) {
-            val obj = Locale("", countryCode)
-            countriesList.add(obj.displayCountry)
-            countriesWithCodes[obj.displayCountry] = obj.country
-        }
         loadCountries();
     }
 
@@ -178,7 +171,16 @@ class RegisterActivity : AppCompatActivity(),
     }
 
     private fun loadCountries() {
+        //      Settings the countries for the spinner
+        val countryCodes = Locale.getISOCountries()
+
+        for (countryCode: String? in countryCodes) {
+            val obj = Locale("", countryCode)
+            countriesList.add(obj.displayCountry)
+            countriesWithCodes[obj.displayCountry] = obj.country
+        }
         countriesSpinner.onItemSelectedListener = this
+
         //Creating the ArrayAdapter instance
         val aa: ArrayAdapter<*> =
             ArrayAdapter<Any?>(
@@ -205,16 +207,15 @@ class RegisterActivity : AppCompatActivity(),
                     .url(url)
                     .build()
                 val response: Response = client.newCall(request).execute()
-
-                withContext(Dispatchers.IO) {
-                    if (response.isSuccessful) {
-                        response.body?.string()?.let { jsonString ->
-                            parseJsonToMutableList(jsonString)
-                            setAdapterForCitiesSpinner()
-                        }
-                    } else {
-                        Log.e("FetchApiData", "Error response code: ${response.code}")
+                if (response.isSuccessful) {
+                    response.body?.string()?.let { jsonString ->
+                        parseJsonToMutableList(jsonString)
                     }
+                    withContext(Dispatchers.Main) {
+                        setAdapterForCitiesSpinner()
+                    }
+                } else {
+                    Log.e("FetchApiData", "Error response code: ${response.code}")
                 }
             } catch (e: IOException) {
                 Log.e("FetchApiData", "Exception: ${e.message}")
