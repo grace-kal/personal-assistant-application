@@ -22,7 +22,7 @@ namespace PersonalAssistant.Api.Controllers
                 return Ok(new { Error = "This email is already registered!" });
 
             var result = await userService.RegisterUser(user);
-            if (result) return Ok(true);
+            if (result) return Ok();
 
             return BadRequest();
         }

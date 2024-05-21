@@ -31,7 +31,7 @@ namespace PersonalAssistant.DataAccess
             {
                 var result = await context.Users.AddAsync(user);
                 await context.SaveChangesAsync();
-                return result.State == EntityState.Modified;
+                return result.State == EntityState.Unchanged;
             }
             catch (Exception ex)
             {
