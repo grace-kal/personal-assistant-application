@@ -1,7 +1,10 @@
 using Microsoft.EntityFrameworkCore;
 using PersonalAssistant.DataAccess;
-using System.Configuration;
 using PersonalAssistant.Api;
+using Microsoft.AspNetCore.Identity;
+using PersonalAssistant.Models;
+using PersonalAssistant.Services;
+using PersonalAssistant.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +19,11 @@ builder.Services.AddDbContext<Context>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Mapping));
+builder.Services.AddScoped<IUserService,UserService>();
+
+builder.Services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<Context>();
 
 var app = builder.Build();
 

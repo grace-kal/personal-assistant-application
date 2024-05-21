@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PersonalAssistant.DataAccess\PersonalAssistant.DataAccess.csproj" />
+    <ProjectReference Include="..\PersonalAssistant.Services\PersonalAssistant.Services.csproj" />
   </ItemGroup>
 
 </Project>

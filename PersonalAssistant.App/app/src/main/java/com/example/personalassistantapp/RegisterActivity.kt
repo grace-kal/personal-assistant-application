@@ -35,6 +35,8 @@ class RegisterActivity : AppCompatActivity(),
     AdapterView.OnItemSelectedListener {
 
     private val client = OkHttpClient()
+    val uppercaseRegex = Regex("[A-Z]")
+    val specialCharRegex = Regex("[^A-Za-z0-9]")
 
     //  View items
     private var usernameET: EditText? = null
@@ -86,11 +88,21 @@ class RegisterActivity : AppCompatActivity(),
 
                 Toast.makeText(
                     this, "Please enter all fields and make sure both passwords match",
-                    Toast.LENGTH_SHORT
+                    Toast.LENGTH_LONG
                 ).show();
                 return;
             }
-
+            if (!uppercaseRegex.containsMatchIn(passwordET?.text.toString())
+                || !specialCharRegex.containsMatchIn(passwordET?.text.toString())
+                || passwordET?.text.toString().length < 8
+            ) {
+                Toast.makeText(
+                    this,
+                    "Your password needs to be at least 8 characters, contain upper and lower case letters and have special characters!",
+                    Toast.LENGTH_LONG
+                ).show();
+                return;
+            }
             val user = User()
             user.username = usernameET?.text.toString()
             user.email = emailET?.text.toString()
@@ -119,13 +131,15 @@ class RegisterActivity : AppCompatActivity(),
             {
               "username": "${user.username}",
               "email": "${user.email}",
-              "password": "${HashHelper.hashString(user.password)}",
+              "password": "${user.password}",
               "firstName": "${user.firstName}",
               "lastName": "${user.lastName}",
               "country": "${user.country}",
               "city": "${user.city}"
             }
         """.trimIndent()
+
+//        "password": "${HashHelper.hashString(user.password)}",
 
         val requestBody: RequestBody = jsonBody.toRequestBody(jsonMediaType)
 
@@ -145,7 +159,7 @@ class RegisterActivity : AppCompatActivity(),
                         val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
                         startActivity(intent)
                     } else {
-                        Log.e("FetchApiData", "Error response code from regidter: ${response.code}")
+                        Toast.makeText(applicationContext, responseData, Toast.LENGTH_LONG).show()
                     }
                 }
             } catch (e: IOException) {

@@ -1,23 +1,23 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 using PersonalAssistant.Api.ViewModels;
 using PersonalAssistant.Models;
+using PersonalAssistant.Services.Interfaces;
 
 namespace PersonalAssistant.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class UserController(IMapper _mapper) : ControllerBase
+    public class UserController(IMapper _mapper, IUserService _userService) : ControllerBase
     {
         [HttpPost("Register")]
-        public async Task<ActionResult<bool>> Register([FromBody] RegisterUserVm request)
+        public async Task<ActionResult> Register([FromBody] RegisterUserVm request)
         {
             var user = _mapper.Map<User>(request);
-
-            if (!user.UserName.IsNullOrEmpty())
-                return true;
-            else return false;
+            var result = await _userService.RegisterUser(user);
+            if (result) return Ok(true);
+            return BadRequest("This email is already registered!");
         }
 
         //[HttpGet("GetRegister")]
