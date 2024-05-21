@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using PersonalAssistant.Models;
 
-namespace PersonalAssistant.Services.Interfaces
+namespace PersonalAssistant.DataAccess.Interfaces
 {
-    public interface IUserService
+    public interface IUserRepository
     {
-        Task<bool> RegisterUser(User user);
         Task<bool> UserEmailExists(string email);
+        Task<bool> RegisterUser(User user);
         Task<User?> Login(User user);
     }
 }

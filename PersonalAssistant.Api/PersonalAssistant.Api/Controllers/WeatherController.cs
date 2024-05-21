@@ -5,14 +5,14 @@ using System.Text.Json;
 namespace PersonalAssistant.Api.Controllers
 {
     [Route("api/[controller]")]
-    public class WeatherController(IWebHostEnvironment _env) : Controller
+    public class WeatherController(IWebHostEnvironment env) : Controller
     {
         [HttpGet("Cities")]
         public async Task<ActionResult<bool>> GetCities([FromQuery] string countryCode)
         {
             var citiesFromCountry = new List<string?>();
 
-            var filePath = Path.Combine(_env.ContentRootPath, "Resources", "LocationsInfo", "cities.json");
+            var filePath = Path.Combine(env.ContentRootPath, "Resources", "LocationsInfo", "cities.json");
 
             using (var jsonFileReader = System.IO.File.OpenText(filePath))
             {

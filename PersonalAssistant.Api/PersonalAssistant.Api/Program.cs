@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using PersonalAssistant.DataAccess;
 using PersonalAssistant.Api;
 using Microsoft.AspNetCore.Identity;
+using PersonalAssistant.DataAccess.Interfaces;
 using PersonalAssistant.Models;
 using PersonalAssistant.Services;
 using PersonalAssistant.Services.Interfaces;
@@ -19,7 +20,10 @@ builder.Services.AddDbContext<Context>(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Mapping));
-builder.Services.AddScoped<IUserService,UserService>();
+
+builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 builder.Services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()

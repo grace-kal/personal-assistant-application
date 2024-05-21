@@ -35,8 +35,8 @@ class RegisterActivity : AppCompatActivity(),
     AdapterView.OnItemSelectedListener {
 
     private val client = OkHttpClient()
-    val uppercaseRegex = Regex("[A-Z]")
-    val specialCharRegex = Regex("[^A-Za-z0-9]")
+//    val uppercaseRegex = Regex("[A-Z]")
+//    val specialCharRegex = Regex("[^A-Za-z0-9]")
 
     //  View items
     private var usernameET: EditText? = null
@@ -92,17 +92,17 @@ class RegisterActivity : AppCompatActivity(),
                 ).show();
                 return;
             }
-            if (!uppercaseRegex.containsMatchIn(passwordET?.text.toString())
-                || !specialCharRegex.containsMatchIn(passwordET?.text.toString())
-                || passwordET?.text.toString().length < 8
-            ) {
-                Toast.makeText(
-                    this,
-                    "Your password needs to be at least 8 characters, contain upper and lower case letters and have special characters!",
-                    Toast.LENGTH_LONG
-                ).show();
-                return;
-            }
+//            if (!uppercaseRegex.containsMatchIn(passwordET?.text.toString())
+//                || !specialCharRegex.containsMatchIn(passwordET?.text.toString())
+//                || passwordET?.text.toString().length < 8
+//            ) {
+//                Toast.makeText(
+//                    this,
+//                    "Your password needs to be at least 8 characters, contain upper and lower case letters and have special characters!",
+//                    Toast.LENGTH_LONG
+//                ).show();
+//                return;
+//            }
             val user = User()
             user.username = usernameET?.text.toString()
             user.email = emailET?.text.toString()
@@ -131,7 +131,7 @@ class RegisterActivity : AppCompatActivity(),
             {
               "username": "${user.username}",
               "email": "${user.email}",
-              "password": "${user.password}",
+              "password": "${HashHelper.hashString(user.password)}",
               "firstName": "${user.firstName}",
               "lastName": "${user.lastName}",
               "country": "${user.country}",
@@ -139,7 +139,7 @@ class RegisterActivity : AppCompatActivity(),
             }
         """.trimIndent()
 
-//        "password": "${HashHelper.hashString(user.password)}",
+
 
         val requestBody: RequestBody = jsonBody.toRequestBody(jsonMediaType)
 

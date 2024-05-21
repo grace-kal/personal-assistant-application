@@ -6,8 +6,8 @@ namespace PersonalAssistant.Api.ViewModels
 {
     public class LoginUserVm
     {
-        [JsonPropertyName("username")]
-        public required string Username { get; set; }
+        [JsonPropertyName("email")]
+        public required string Email { get; set; }
 
         [JsonPropertyName("password")]
         public required string PasswordHash{ get; set; }
