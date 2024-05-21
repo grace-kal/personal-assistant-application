@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.example.personalassistantapp.helpers.ApiRequestHelper
 import com.example.personalassistantapp.helpers.HashHelper
+import com.example.personalassistantapp.helpers.constantValues.StaticValues
 import com.example.personalassistantapp.models.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,9 +28,12 @@ import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import org.json.JSONArray
+import org.json.JSONObject
 import java.io.IOException
 import java.util.Locale
 
+
+private const val s = "Error"
 
 class RegisterActivity : AppCompatActivity(),
     AdapterView.OnItemSelectedListener {
@@ -89,8 +93,8 @@ class RegisterActivity : AppCompatActivity(),
                 Toast.makeText(
                     this, "Please enter all fields and make sure both passwords match",
                     Toast.LENGTH_LONG
-                ).show();
-                return;
+                ).show()
+                return
             }
 //            if (!uppercaseRegex.containsMatchIn(passwordET?.text.toString())
 //                || !specialCharRegex.containsMatchIn(passwordET?.text.toString())
@@ -140,7 +144,6 @@ class RegisterActivity : AppCompatActivity(),
         """.trimIndent()
 
 
-
         val requestBody: RequestBody = jsonBody.toRequestBody(jsonMediaType)
 
         lifecycleScope.launch(Dispatchers.IO) {
@@ -155,11 +158,21 @@ class RegisterActivity : AppCompatActivity(),
 
                 // Switch to Main dispatcher to update UI
                 withContext(Dispatchers.Main) {
-                    if (response.isSuccessful && responseData != null) {
-                        val intent = Intent(this@RegisterActivity, LoginActivity::class.java)
+                    if (responseData != null) {
+                        var error: String = ""
+                        if (responseData.isNotEmpty()) {
+                            val jsonObj = JSONObject(responseData)
+                            if (jsonObj.has(StaticValues.ERROR_JSON_RESPONSE))
+                                error = jsonObj.getString(StaticValues.ERROR_JSON_RESPONSE)
+                        }
+                        if (error.isNotEmpty()) {
+                            Toast.makeText(applicationContext, error, Toast.LENGTH_LONG).show()
+                            return@withContext
+                        }
+                        val intent =
+                            Intent(this@RegisterActivity, LoginActivity::class.java)
                         startActivity(intent)
-                    } else {
-                        Toast.makeText(applicationContext, responseData, Toast.LENGTH_LONG).show()
+
                     }
                 }
             } catch (e: IOException) {
