@@ -27,6 +27,7 @@
     <string name="password_hint">Password</string>
     <string name="repeat_password_hint">Repeat password</string>
     <string name="register_btn_text">Register</string>
+    <string name="login_btn_text">Login</string>
     <string name="cancel_btn_text">Cancel</string>
     <string name="first_name_hint">First name</string>
     <string name="last_name_hint">Last name</string>

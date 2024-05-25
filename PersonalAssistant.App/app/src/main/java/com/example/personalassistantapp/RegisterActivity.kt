@@ -271,4 +271,10 @@ class RegisterActivity : AppCompatActivity(),
             citiesList.add(city)
         }
     }
+
+    fun redirectToLogin(view: View) {
+        val intent =
+            Intent(this@RegisterActivity, LoginActivity::class.java)
+        startActivity(intent)
+    }
 }
