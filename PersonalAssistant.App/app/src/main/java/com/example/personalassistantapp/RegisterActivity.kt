@@ -156,23 +156,23 @@ class RegisterActivity : AppCompatActivity(),
                 val response: Response = client.newCall(request).execute()
                 val responseData = response.body?.string()
 
+                var error: String = ""
+                if (responseData != null) {
+                    if (responseData.isNotEmpty()) {
+                        val jsonObj = JSONObject(responseData)
+                        if (jsonObj.has(StaticValues.ERROR_JSON_RESPONSE))
+                            error = jsonObj.getString(StaticValues.ERROR_JSON_RESPONSE)
+                    }
+                }
+
                 // Switch to Main dispatcher to update UI
                 withContext(Dispatchers.Main) {
-                    if (responseData != null) {
-                        var error: String = ""
-                        if (responseData.isNotEmpty()) {
-                            val jsonObj = JSONObject(responseData)
-                            if (jsonObj.has(StaticValues.ERROR_JSON_RESPONSE))
-                                error = jsonObj.getString(StaticValues.ERROR_JSON_RESPONSE)
-                        }
-                        if (error.isNotEmpty()) {
-                            Toast.makeText(applicationContext, error, Toast.LENGTH_LONG).show()
-                            return@withContext
-                        }
+                    if (error.isNotEmpty()) {
+                        Toast.makeText(applicationContext, error, Toast.LENGTH_LONG).show()
+                    } else {
                         val intent =
                             Intent(this@RegisterActivity, LoginActivity::class.java)
                         startActivity(intent)
-
                     }
                 }
             } catch (e: IOException) {
