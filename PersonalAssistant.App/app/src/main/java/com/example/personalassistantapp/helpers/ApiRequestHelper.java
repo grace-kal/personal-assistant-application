@@ -13,6 +13,7 @@ public class ApiRequestHelper {
 
     //    User controller methods
     public static final String REGISTER_ENDPOINT_USERCONTROLLER = "/Register";
+    public static final String LOGIN_ENDPOINT_USERCONTROLLER = "/Login";
 
 //    Weather controller methods
     public static final String CITIES_FOR_COUNTRY_ENDPOINT_WEATHERCONTROLLER = "/Cities";

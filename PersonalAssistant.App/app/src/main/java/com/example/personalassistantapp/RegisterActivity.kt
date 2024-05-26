@@ -1,6 +1,8 @@
 package com.example.personalassistantapp
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -17,6 +19,8 @@ import androidx.lifecycle.lifecycleScope
 import com.example.personalassistantapp.helpers.ApiRequestHelper
 import com.example.personalassistantapp.helpers.HashHelper
 import com.example.personalassistantapp.helpers.constantValues.StaticValues
+import com.example.personalassistantapp.helpers.constantValues.StaticValues.PREFS_NAME
+import com.example.personalassistantapp.helpers.constantValues.StaticValues.TOKEN_KEY
 import com.example.personalassistantapp.models.User
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -82,6 +86,7 @@ class RegisterActivity : AppCompatActivity(),
         loadCountries();
     }
 
+    //    Register btn on click
     fun onClick(view: View) {
         if (view.id == R.id.registerOkBtn) {
             if (usernameET?.text.toString().isEmpty()
