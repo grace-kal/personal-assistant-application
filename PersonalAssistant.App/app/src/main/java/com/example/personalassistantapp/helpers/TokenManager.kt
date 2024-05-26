@@ -2,9 +2,9 @@ package com.example.personalassistantapp.helpers
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.auth0.android.jwt.JWT
 import com.example.personalassistantapp.helpers.constantValues.StaticValues.PREFS_NAME
 import com.example.personalassistantapp.helpers.constantValues.StaticValues.TOKEN_KEY
-import com.google.common.net.MediaType.JWT
 import java.util.Date
 
 class TokenManager(context: Context) {
@@ -51,7 +51,7 @@ class TokenManager(context: Context) {
                 println("Token validity duration (minutes): $validityDurationMinutes")
 
                 val expectedDurationMinutes = 420
-                if (validityDurationMinutes == expectedDurationMinutes) {
+                if (validityDurationMinutes.toInt() == expectedDurationMinutes) {
                     return false
                 } else {
                     return true

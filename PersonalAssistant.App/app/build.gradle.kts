@@ -48,6 +48,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation (libs.jwtdecode)
 //    Lombok
     implementation(libs.lombok.v11830)
     implementation(libs.androidx.activity)
