@@ -42,7 +42,13 @@ namespace PersonalAssistant.Api.Controllers
         private string GenerateJwtToken(User user)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = "your-secret-key"u8.ToArray();
+            var key = System.Text.Encoding.UTF8.GetBytes("your-very-secure-key-12345-secure");
+
+            // Verify key length
+            if (key.Length < 16)
+            {
+                throw new ArgumentException("The key must be at least 16 bytes long.");
+            }
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {

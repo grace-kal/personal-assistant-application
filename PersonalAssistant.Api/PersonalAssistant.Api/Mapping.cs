@@ -9,6 +9,7 @@ namespace PersonalAssistant.Api
         public Mapping()
         {
             CreateMap<RegisterUserVm, User>();
+            CreateMap<LoginUserVm, User>();
         }
 
     }
