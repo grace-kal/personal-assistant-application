@@ -1,6 +1,7 @@
 ﻿using PersonalAssistant.DataAccess.Interfaces;
 using PersonalAssistant.Models;
 using PersonalAssistant.Services.Interfaces;
+using Task = System.Threading.Tasks.Task;
 
 namespace PersonalAssistant.Services
 {
@@ -44,9 +45,9 @@ namespace PersonalAssistant.Services
             return await repository.UserEmailExists(email);
         }
 
-        public Task<User?> Login(User user)
+        public async Task<User?> Login(User user)
         {
-            return repository.Login(user);
+            return await repository.Login(user);
         }
     }
 }
