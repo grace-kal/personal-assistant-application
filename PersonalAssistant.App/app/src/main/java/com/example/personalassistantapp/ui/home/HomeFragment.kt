@@ -13,11 +13,13 @@ import com.example.personalassistantapp.databinding.FragmentHomeBinding
 import com.example.personalassistantapp.databinding.ItemEventBinding
 import com.example.personalassistantapp.databinding.ItemNoteBinding
 import com.example.personalassistantapp.databinding.ItemTaskBinding
+import com.example.personalassistantapp.helpers.TokenManager
 import com.example.personalassistantapp.models.Event
 import com.example.personalassistantapp.models.Note
 import com.example.personalassistantapp.models.Task
 
 class HomeFragment : Fragment() {
+    private lateinit var tokenManager: TokenManager
     private lateinit var _eventsAdapter: EventsAdapter
     private lateinit var _tasksAdapter: TasksAdapter
     private lateinit var _notesAdapter: NotesAdapter
@@ -34,27 +36,31 @@ class HomeFragment : Fragment() {
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
-        homeViewModel.init()
-        _eventsAdapter = EventsAdapter(homeViewModel.events.value ?: emptyList())
-        _tasksAdapter = TasksAdapter(homeViewModel.tasks.value ?: emptyList())
-        _notesAdapter = NotesAdapter(homeViewModel.notes.value ?: emptyList())
+        tokenManager = TokenManager(requireContext())
+        if(tokenManager.getEmailFromToken()?.isNotEmpty() == true){
+            homeViewModel.init(tokenManager.getEmailFromToken())
 
-        homeViewModel.events.observe(viewLifecycleOwner) { events ->
-            _eventsAdapter.updateData(events)
+            _eventsAdapter = EventsAdapter(homeViewModel.events.value ?: emptyList())
+            _tasksAdapter = TasksAdapter(homeViewModel.tasks.value ?: emptyList())
+            _notesAdapter = NotesAdapter(homeViewModel.notes.value ?: emptyList())
+
+            homeViewModel.events.observe(viewLifecycleOwner) { events ->
+                _eventsAdapter.updateData(events)
+            }
+
+            homeViewModel.tasks.observe(viewLifecycleOwner) { tasks ->
+                _tasksAdapter.updateData(tasks)
+            }
+
+            homeViewModel.notes.observe(viewLifecycleOwner) { notes ->
+                _notesAdapter.updateData(notes)
+            }
+
+
+            binding.eventsList.adapter = _eventsAdapter
+            binding.tasksList.adapter = _tasksAdapter
+            binding.notesList.adapter = _notesAdapter
         }
-
-        homeViewModel.tasks.observe(viewLifecycleOwner) { tasks ->
-            _tasksAdapter.updateData(tasks)
-        }
-
-        homeViewModel.notes.observe(viewLifecycleOwner) { notes ->
-            _notesAdapter.updateData(notes)
-        }
-
-
-        binding.eventsList.adapter = _eventsAdapter
-        binding.tasksList.adapter = _tasksAdapter
-        binding.notesList.adapter = _notesAdapter
 
         val root: View = binding.root
         return root

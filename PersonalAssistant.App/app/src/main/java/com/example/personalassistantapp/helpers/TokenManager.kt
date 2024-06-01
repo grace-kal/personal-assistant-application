@@ -4,12 +4,14 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.auth0.android.jwt.JWT
 import com.example.personalassistantapp.helpers.constantValues.StaticValues.PREFS_NAME
+import com.example.personalassistantapp.helpers.constantValues.StaticValues.TOKEN_EMAIL
 import com.example.personalassistantapp.helpers.constantValues.StaticValues.TOKEN_KEY
 import java.util.Date
 
 class TokenManager(context: Context) {
 
-    private val sharedPreferences: SharedPreferences = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+    private val sharedPreferences: SharedPreferences =
+        context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
     fun containsToken(): Boolean {
         return sharedPreferences.contains(TOKEN_KEY)
@@ -17,6 +19,17 @@ class TokenManager(context: Context) {
 
     fun getToken(): String? {
         return sharedPreferences.getString(TOKEN_KEY, null)
+    }
+
+    fun getEmailFromToken(): String? {
+        val token = getToken() ?: return null
+        return try {
+            val jwt = JWT(token)
+            jwt.getClaim(TOKEN_EMAIL).asString()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
+        }
     }
 
     fun saveToken(token: String) {
@@ -46,7 +59,8 @@ class TokenManager(context: Context) {
                     return true
                 }
                 val validityDuration = expiresAt.time - issuedAt.time // Duration in milliseconds
-                val validityDurationMinutes = validityDuration / (1000 * 60) // Convert milliseconds to minutes
+                val validityDurationMinutes =
+                    validityDuration / (1000 * 60) // Convert milliseconds to minutes
 
                 println("Token validity duration (minutes): $validityDurationMinutes")
 

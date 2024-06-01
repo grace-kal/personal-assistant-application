@@ -1,13 +1,27 @@
 package com.example.personalassistantapp.ui.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.example.personalassistantapp.helpers.ApiRequestHelper
 import com.example.personalassistantapp.models.Event
 import com.example.personalassistantapp.models.Note
 import com.example.personalassistantapp.models.Task
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import java.io.IOException
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 class HomeViewModel : ViewModel() {
+    private val client = OkHttpClient()
+    private var email: String = "";
+    private var date: String = "";
+
     private val _events = MutableLiveData<List<Event>>()
     val events: LiveData<List<Event>> get() = _events
 
@@ -17,18 +31,41 @@ class HomeViewModel : ViewModel() {
     private val _notes = MutableLiveData<List<Note>>()
     val notes: LiveData<List<Note>> get() = _notes
 
-    fun init() {
+    fun init(email: String?) {
+        this.email = email!!
+
+        //current date to format ISO 8601
+        val currentDate = LocalDate.now()
+        val dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE
+        val date = currentDate.format(dateFormatter)
+
         fetchEvents()
         fetchTasks()
         fetchNotes()
     }
 
     private fun fetchEvents() {
-        // Simulated API request to fetch events
-        _events.value = listOf(
-            Event("09:00", "Event 1", "Description 1"),
-            Event("10:00", "Event 2", "Description 2")
+        val baseUrl = ApiRequestHelper.urlBuilder(
+            ApiRequestHelper.EVENTSCONTROLLER,
+            ApiRequestHelper.GET_ALL_EVENTS_FOR_DATE_ENDPOINT_EVENTCONTROLLER
         )
+        var url = ApiRequestHelper.valuesBuilder(baseUrl, "email=${email}&date=${date}")
+
+        try {
+            val request = Request.Builder()
+                .url(url)
+                .build()
+            val response: Response = client.newCall(request).execute()
+            if (response.isSuccessful) {
+                response.body?.string()?.let { jsonString ->
+                    parseJsonEventsList(jsonString)
+                }
+            } else {
+                Log.e("FetchApiData", "Error response code: ${response.code}")
+            }
+        } catch (e: IOException) {
+            Log.e("FetchApiData", "Exception: ${e.message}")
+        }
     }
 
     private fun fetchTasks() {
@@ -46,8 +83,4 @@ class HomeViewModel : ViewModel() {
             Note("Note 2", "Content 2")
         )
     }
-//    private val _text = MutableLiveData<String>().apply {
-//        value = "This is home Fragment"
-//    }
-//    val text: LiveData<String> = _text
 }

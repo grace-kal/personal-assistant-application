@@ -36,9 +36,6 @@ import org.json.JSONObject
 import java.io.IOException
 import java.util.Locale
 
-
-private const val s = "Error"
-
 class RegisterActivity : AppCompatActivity(),
     AdapterView.OnItemSelectedListener {
 
