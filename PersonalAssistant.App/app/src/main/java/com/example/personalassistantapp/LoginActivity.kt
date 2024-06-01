@@ -143,11 +143,7 @@ class LoginActivity : AppCompatActivity() {
     private fun checkIfThereIsUserWithValidToken() {
         if (tokenManager.containsToken()) {
             val token = tokenManager.getToken()
-            if (token != null && tokenManager.isTokenExpired(token)) {
-                val intent =
-                    Intent(this@LoginActivity, RegisterActivity::class.java)
-                startActivity(intent)
-            } else {
+            if (token != null && !tokenManager.isTokenExpired(token)) {
                 val intent =
                     Intent(this@LoginActivity, MainActivity::class.java)
                 startActivity(intent)

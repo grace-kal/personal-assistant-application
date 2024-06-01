@@ -64,7 +64,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/eventsTitle"
-            tools:listitem="@layout/item_event" />
+            tools:listitem="@layout/item_event"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
         <TextView
             android:id="@+id/tasksTitle"
@@ -87,7 +88,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tasksTitle"
-            tools:listitem="@layout/item_task" />
+            tools:listitem="@layout/item_task"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
         <TextView
             android:id="@+id/notesTitle"
@@ -110,7 +112,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/notesTitle"
-            tools:listitem="@layout/item_note" />
+            tools:listitem="@layout/item_note"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
 
     </LinearLayout>
 </ScrollView>
