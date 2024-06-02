@@ -14,8 +14,11 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import java.io.IOException
+import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Calendar
+import java.util.Locale
 
 class HomeViewModel : ViewModel() {
     private val client = OkHttpClient()
@@ -35,9 +38,9 @@ class HomeViewModel : ViewModel() {
         this.email = email!!
 
         //current date to format ISO 8601
-        val currentDate = LocalDate.now()
-        val dateFormatter = DateTimeFormatter.ISO_LOCAL_DATE
-        val date = currentDate.format(dateFormatter)
+        val calendar = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        date = dateFormat.format(calendar.time)
 
         fetchEvents()
         fetchTasks()
@@ -66,6 +69,10 @@ class HomeViewModel : ViewModel() {
         } catch (e: IOException) {
             Log.e("FetchApiData", "Exception: ${e.message}")
         }
+    }
+
+    private fun parseJsonEventsList(jsonString: String) {
+
     }
 
     private fun fetchTasks() {
