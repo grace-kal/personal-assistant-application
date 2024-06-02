@@ -31,4 +31,7 @@
     <string name="cancel_btn_text">Cancel</string>
     <string name="first_name_hint">First name</string>
     <string name="last_name_hint">Last name</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="add_event_btn">Add event</string>
 </resources>
