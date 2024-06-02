@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using PersonalAssistant.DataAccess;
 using PersonalAssistant.Api;
 using Microsoft.AspNetCore.Identity;
+using PersonalAssistant.Api.Helpers;
 using PersonalAssistant.DataAccess.Interfaces;
 using PersonalAssistant.Models;
 using PersonalAssistant.Services;
@@ -21,9 +22,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(typeof(Mapping));
 
+builder.Services.AddScoped<DateTimeHelper>();
+
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IEventService, EventService>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IEventRepository, EventRepository>();
 
 builder.Services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()

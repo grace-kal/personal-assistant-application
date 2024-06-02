@@ -15,6 +15,8 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import org.json.JSONArray
+import org.json.JSONObject
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -67,13 +69,15 @@ class HomeViewModel : ViewModel() {
                     .url(url)
                     .build()
                 val response: Response = client.newCall(request).execute()
-                if (response.isSuccessful) {
-                    withContext(Dispatchers.Main) {
-                        //                response.body?.string()?.let { jsonString ->
-                        parseJsonEventsList("")
-//                }
+                val responseData = response.body?.string()
+                if (!responseData.isNullOrEmpty()) {
+                    val jsonArray = JSONArray(responseData) // Import JSONArray
+                    if(jsonArray.length()>0){
+                        val eventsList = parseJsonEventsList(jsonArray) // Adjust parsing function
+                        withContext(Dispatchers.Main) {
+                            _events.value = eventsList
+                        }
                     }
-
                 } else {
                     Log.e("FetchApiData", "Error response code: ${response.code}")
                 }
@@ -83,11 +87,22 @@ class HomeViewModel : ViewModel() {
         }
     }
 
-    private fun parseJsonEventsList(jsonString: String) {
-        _events.value = listOf(
-            Event("06:00", "Task 1", "Description 1"),
-            Event("06:00", "Task 2", "Description 2")
+    private fun parseJsonEventsList(jsonObj: JSONArray): List<Event> {
+        Log.w("Events response:", "jj")
+        return listOf(
+            Event("00:00", "IMPLEMENT", "Description 1"),
+            Event("00:00", "Task 2", "Description 2")
         )
+
+//        val events = mutableListOf<Event>()
+//        for (i in 0 until jsonArray.length()) {
+//            val eventObj = jsonArray.getJSONObject(i)
+//            val time = eventObj.getString("time")
+//            val title = eventObj.getString("title")
+//            val description = eventObj.getString("description")
+//            events.add(Event(time, title, description))
+//        }
+//        return events
     }
 
     private fun fetchTasks() {

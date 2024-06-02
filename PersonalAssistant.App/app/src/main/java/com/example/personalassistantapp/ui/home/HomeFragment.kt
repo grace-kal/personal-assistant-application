@@ -31,8 +31,6 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         tokenManager = TokenManager(requireContext())
 
@@ -42,6 +40,7 @@ class HomeFragment : Fragment() {
 
             homeViewModel.init(tokenManager.getEmailFromToken())
 
+//            if(homeViewModel.events.value? !=null) do this check if i want text when no items
             _eventsAdapter = EventsAdapter(homeViewModel.events.value ?: emptyList())
             _tasksAdapter = TasksAdapter(homeViewModel.tasks.value ?: emptyList())
             _notesAdapter = NotesAdapter(homeViewModel.notes.value ?: emptyList())
