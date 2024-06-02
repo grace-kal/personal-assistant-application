@@ -72,7 +72,7 @@ class HomeViewModel : ViewModel() {
                 val responseData = response.body?.string()
                 if (!responseData.isNullOrEmpty()) {
                     val jsonArray = JSONArray(responseData) // Import JSONArray
-                    if(jsonArray.length()>0){
+                    if (jsonArray.length() > 0) {
                         val eventsList = parseJsonEventsList(jsonArray) // Adjust parsing function
                         withContext(Dispatchers.Main) {
                             _events.value = eventsList
@@ -106,16 +106,75 @@ class HomeViewModel : ViewModel() {
     }
 
     private fun fetchTasks() {
-        // Simulated API request to fetch tasks
-        _tasks.value = listOf(
+        val baseUrl = ApiRequestHelper.urlBuilder(
+            ApiRequestHelper.TASKSCONTROLLER,
+            ApiRequestHelper.GET_ALL_TASKS_FOR_DATE_ENDPOINT_TASKCONTROLLER
+        )
+        var url = ApiRequestHelper.valuesBuilder(baseUrl, "email=${email}&date=${date}")
+
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val request = Request.Builder()
+                    .url(url)
+                    .build()
+                val response: Response = client.newCall(request).execute()
+                val responseData = response.body?.string()
+                if (!responseData.isNullOrEmpty()) {
+                    val jsonArray = JSONArray(responseData) // Import JSONArray
+                    if (jsonArray.length() > 0) {
+                        val tasksList = parseJsonTasksList(jsonArray) // Adjust parsing function
+                        withContext(Dispatchers.Main) {
+                            _tasks.value = tasksList
+                        }
+                    }
+                } else {
+                    Log.e("FetchApiData", "Error response code: ${response.code}")
+                }
+            } catch (e: IOException) {
+                Log.e("FetchApiData", "Exception: ${e.message}")
+            }
+        }
+    }
+
+    private fun parseJsonTasksList(jsonArray: JSONArray): List<Task> {
+        return listOf(
             Task("11:00", "Task 1", "Description 1"),
             Task("12:00", "Task 2", "Description 2")
         )
     }
 
     private fun fetchNotes() {
-        // Simulated API request to fetch notes
-        _notes.value = listOf(
+        val baseUrl = ApiRequestHelper.urlBuilder(
+            ApiRequestHelper.NOTESCONTROLLER,
+            ApiRequestHelper.GET_ALL_NOTES_FOR_DATE_ENDPOINT_NOTECONTROLLER
+        )
+        var url = ApiRequestHelper.valuesBuilder(baseUrl, "email=${email}&date=${date}")
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val request = Request.Builder()
+                    .url(url)
+                    .build()
+                val response: Response = client.newCall(request).execute()
+                val responseData = response.body?.string()
+                if (!responseData.isNullOrEmpty()) {
+                    val jsonArray = JSONArray(responseData) // Import JSONArray
+                    if (jsonArray.length() > 0) {
+                        val notesList = parseJsonNotesList(jsonArray) // Adjust parsing function
+                        withContext(Dispatchers.Main) {
+                            _notes.value = notesList
+                        }
+                    }
+                } else {
+                    Log.e("FetchApiData", "Error response code: ${response.code}")
+                }
+            } catch (e: IOException) {
+                Log.e("FetchApiData", "Exception: ${e.message}")
+            }
+        }
+    }
+
+    private fun parseJsonNotesList(jsonArray: JSONArray): List<Note> {
+        return listOf(
             Note("Note 1", "Content 1"),
             Note("Note 2", "Content 2")
         )

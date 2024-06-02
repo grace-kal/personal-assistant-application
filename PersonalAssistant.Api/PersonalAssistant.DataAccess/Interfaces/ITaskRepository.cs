@@ -1,8 +1,8 @@
 ﻿using Task = PersonalAssistant.Models.Task;
 
-namespace PersonalAssistant.Services.Interfaces
+namespace PersonalAssistant.DataAccess.Interfaces
 {
-    public interface ITaskService
+    public interface ITaskRepository
     {
         Task<IEnumerable<Task>> GetAllTasksForDate(DateTime date, string email);
     }

@@ -6,7 +6,8 @@ public class ApiRequestHelper {
     // var urlString = "http://10.0.2.2:5239/api/User/GetRegister?username=lala"
     public static final String USERCONTROLLER = "/User";
     public static final String EVENTSCONTROLLER = "/Event";
-    public static final String TASKSCONTROLLER = "";
+    public static final String TASKSCONTROLLER = "/Task";
+    public static final String NOTESCONTROLLER = "/Note";
     public static final String WARDROBECONTROLLER = "";
     public static final String WEATHERCONTROLLER = "/Weather";
 
@@ -20,6 +21,12 @@ public class ApiRequestHelper {
 
 //    Event controller methods
 public static final String GET_ALL_EVENTS_FOR_DATE_ENDPOINT_EVENTCONTROLLER = "/GetAllEventsForDate";
+
+    //    Event controller methods
+    public static final String GET_ALL_TASKS_FOR_DATE_ENDPOINT_TASKCONTROLLER = "/GetAllTasksForDate";
+
+    //    Event controller methods
+    public static final String GET_ALL_NOTES_FOR_DATE_ENDPOINT_NOTECONTROLLER = "/GetAllNotesForDate";
 
 
 
