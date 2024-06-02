@@ -4,11 +4,13 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.personalassistantapp.helpers.ApiRequestHelper
 import com.example.personalassistantapp.models.Event
 import com.example.personalassistantapp.models.Note
 import com.example.personalassistantapp.models.Task
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -24,6 +26,11 @@ class HomeViewModel : ViewModel() {
     private val client = OkHttpClient()
     private var email: String = "";
     private var date: String = "";
+
+    private val _text = MutableLiveData<String>().apply {
+        value = "This is home Fragment"
+    }
+    val text: LiveData<String> = _text
 
     private val _events = MutableLiveData<List<Event>>()
     val events: LiveData<List<Event>> get() = _events
@@ -54,25 +61,33 @@ class HomeViewModel : ViewModel() {
         )
         var url = ApiRequestHelper.valuesBuilder(baseUrl, "email=${email}&date=${date}")
 
-        try {
-            val request = Request.Builder()
-                .url(url)
-                .build()
-            val response: Response = client.newCall(request).execute()
-            if (response.isSuccessful) {
-                response.body?.string()?.let { jsonString ->
-                    parseJsonEventsList(jsonString)
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val request = Request.Builder()
+                    .url(url)
+                    .build()
+                val response: Response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    withContext(Dispatchers.Main) {
+                        //                response.body?.string()?.let { jsonString ->
+                        parseJsonEventsList("")
+//                }
+                    }
+
+                } else {
+                    Log.e("FetchApiData", "Error response code: ${response.code}")
                 }
-            } else {
-                Log.e("FetchApiData", "Error response code: ${response.code}")
+            } catch (e: IOException) {
+                Log.e("FetchApiData", "Exception: ${e.message}")
             }
-        } catch (e: IOException) {
-            Log.e("FetchApiData", "Exception: ${e.message}")
         }
     }
 
     private fun parseJsonEventsList(jsonString: String) {
-
+        _events.value = listOf(
+            Event("06:00", "Task 1", "Description 1"),
+            Event("06:00", "Task 2", "Description 2")
+        )
     }
 
     private fun fetchTasks() {

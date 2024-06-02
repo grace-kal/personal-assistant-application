@@ -31,13 +31,15 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
+
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-
         tokenManager = TokenManager(requireContext())
-        if(tokenManager.getEmailFromToken()?.isNotEmpty() == true){
+
+        if (tokenManager.getEmailFromToken()?.isNotEmpty() == true) {
+            val homeViewModel =
+                ViewModelProvider(this)[HomeViewModel::class.java]
+
             homeViewModel.init(tokenManager.getEmailFromToken())
 
             _eventsAdapter = EventsAdapter(homeViewModel.events.value ?: emptyList())
