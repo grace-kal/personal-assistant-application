@@ -17,7 +17,7 @@ class EventsAdapter(private var events: List<Event>) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val event = events[position]
-        holder.binding.timeTextView.text = event.time
+        holder.binding.timeTextView.text = event.startTime
         holder.binding.titleTextView.text = event.title
         holder.binding.descriptionTextView.text = event.description
     }

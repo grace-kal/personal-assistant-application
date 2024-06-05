@@ -63,20 +63,17 @@ class EventsViewModel : ViewModel() {
     }
 
     private fun parseJsonEventsList(jsonObj: JSONArray): List<Event> {
-        Log.w("Events response:", "jj")
-        return listOf(
-            Event("00:00", "IMPLEMENT", "Description 1", null, null, null, null, null),
-            Event("00:00", "Task 2", "Description 2",null, null, null, null, null)
-        )
-
-//        val events = mutableListOf<Event>()
-//        for (i in 0 until jsonArray.length()) {
-//            val eventObj = jsonArray.getJSONObject(i)
-//            val time = eventObj.getString("time")
-//            val title = eventObj.getString("title")
-//            val description = eventObj.getString("description")
-//            events.add(Event(time, title, description))
-//        }
-//        return events
+        val events = mutableListOf<Event>()
+        for (i in 0 until jsonObj.length()) {
+            val eventObj = jsonObj.getJSONObject(i)
+            val startDate = eventObj.getString("startDate")
+            val startTime = eventObj.getString("startTime")
+            val endDate = eventObj.getString("endDate")
+            val endTime = eventObj.getString("endTime")
+            val title = eventObj.getString("title")
+            val description = eventObj.getString("description")
+            events.add(Event(null, title, description,null,startDate,endDate,startTime,endTime))
+        }
+        return events
     }
 }

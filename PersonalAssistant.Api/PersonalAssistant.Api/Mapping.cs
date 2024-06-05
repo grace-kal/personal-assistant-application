@@ -12,7 +12,7 @@ namespace PersonalAssistant.Api
             CreateMap<RegisterUserVm, User>();
             CreateMap<LoginUserVm, User>();
 
-            CreateMap<NewEventVM, Event>();
+            CreateMap<EventVM, Event>();
         }
 
     }

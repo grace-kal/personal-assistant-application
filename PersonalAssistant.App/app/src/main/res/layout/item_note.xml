@@ -13,7 +13,8 @@
         android:layout_height="wrap_content"
         android:text="Time"
         android:textColor="@color/midnight_284261"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:layout_margin="5dp"/>
 
     <TextView
         android:id="@+id/titleTextView"
@@ -21,7 +22,8 @@
         android:layout_height="wrap_content"
         android:text="Title"
         android:textColor="@color/midnight_284261"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:layout_margin="5dp"/>
 
     <TextView
         android:id="@+id/descriptionTextView"
@@ -29,5 +31,6 @@
         android:layout_height="wrap_content"
         android:text="Description"
         android:textColor="@color/midnight_284261"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:layout_margin="5dp"/>
 </LinearLayout>
