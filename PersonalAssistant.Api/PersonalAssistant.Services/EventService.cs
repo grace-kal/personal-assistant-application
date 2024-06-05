@@ -8,9 +8,13 @@ namespace PersonalAssistant.Services
 {
     public class EventService(IEventRepository repository, IUserService userService) : IEventService
     {
-        public Task CreateEvent(Event newEvent, string email)
+        public async Task CreateEvent(Event newEvent, string email)
         {
-            throw new NotImplementedException();
+            if (!await userService.UserEmailExists(email))
+            {
+                throw new BadHttpRequestException("No such user email registered");
+            }
+            await repository.CreateEvent(newEvent, email);
         }
 
         public async Task<IEnumerable<Event>> GetAllEventsForDate(DateTime date, string email)

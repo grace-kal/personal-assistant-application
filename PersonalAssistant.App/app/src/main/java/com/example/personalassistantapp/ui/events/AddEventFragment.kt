@@ -139,6 +139,7 @@ class AddEventFragment : Fragment() {
                     .url(urlString)
                     .post(requestBody)
                     .build()
+                client.newCall(request).execute()
                 withContext(Dispatchers.Main) {
                     findNavController().navigate(com.example.personalassistantapp.R.id.action_addEventsFragment_to_eventsFragment)
                 }
@@ -228,7 +229,7 @@ class AddEventFragment : Fragment() {
         val datePickerDialog = DatePickerDialog(
             requireContext(),
             DatePickerDialog.OnDateSetListener { _, selectedYear, selectedMonth, selectedDay ->
-                val selectedDate = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+                val selectedDate = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                     .format(Date(selectedYear - 1900, selectedMonth, selectedDay))
                 editText.setText(selectedDate)
             },

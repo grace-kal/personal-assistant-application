@@ -5,13 +5,12 @@ namespace PersonalAssistant.Api.Helpers
     public class DateTimeHelper
     {
         const string DateFormat = "yyyy-MM-dd";
-        const string TimeFormat = "hh-mm";
-        const string DateTimeFormat = "yyyy-MM-ddThh-mm";
+        const string TimeFormat = "hh:mm";
+        const string DateTimeFormat = "yyyy-MM-dd'T'HH:mm";
 
 
         public DateTime GetDateFromJsonString(string date)
         {
-
             return DateTime.ParseExact(date, DateFormat, System.Globalization.CultureInfo.InvariantCulture);
         }
 
