@@ -7,8 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CalendarView.OnDateChangeListener
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.personalassistantapp.adapters.EventsAdapter
 import com.example.personalassistantapp.databinding.FragmentEventsBinding
 import com.example.personalassistantapp.helpers.TokenManager
@@ -74,6 +74,11 @@ class EventsFragment : Fragment() {
 
         })
 
+        binding.createBtn.setOnClickListener {
+            // Navigate to AddEventFragment
+            findNavController().navigate(com.example.personalassistantapp.R.id.action_eventsFragment_to_addEventsFragment)
+        }
+
         val root: View = binding.root
         return root
     }
@@ -81,13 +86,5 @@ class EventsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    fun addEventBtn(view: View){
-// Navigate to AddEventFragment
-//        parentFragmentManager.commit {
-//            replace(R.id.list_container, AddEventFragment())
-//            addToBackStack(null)
-//        }
     }
 }

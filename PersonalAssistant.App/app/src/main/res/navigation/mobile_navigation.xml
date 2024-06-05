@@ -24,12 +24,6 @@
     <!--        tools:layout="@layout/fragment_slideshow" />-->
 
     <fragment
-        android:id="@+id/nav_events"
-        android:name="com.example.personalassistantapp.ui.events.EventsFragment"
-        android:label="@string/menu_events"
-        tools:layout="@layout/fragment_events" />
-
-    <fragment
         android:id="@+id/nav_tasks"
         android:name="com.example.personalassistantapp.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_tasks"
@@ -64,4 +58,26 @@
         android:name="com.example.personalassistantapp.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_contact_support"
         tools:layout="@layout/fragment_slideshow" />
+
+<!--Navigation from events page to the add event and back-->
+
+    <fragment
+        android:id="@+id/nav_events"
+        android:name="com.example.personalassistantapp.ui.events.EventsFragment"
+        android:label="@string/menu_events"
+        tools:layout="@layout/fragment_events">
+        <action
+            android:id="@+id/action_eventsFragment_to_addEventsFragment"
+            app:destination="@id/addEventFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addEventFragment"
+        android:name="com.example.personalassistantapp.ui.events.AddEventFragment"
+        android:label="Add event"
+        tools:layout="@layout/fragment_add_event" >
+        <action
+            android:id="@+id/action_addEventsFragment_to_eventsFragment"
+            app:destination="@id/nav_events" />
+    </fragment>
 </navigation>
