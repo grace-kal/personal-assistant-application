@@ -105,7 +105,7 @@
         <ListView
             android:id="@+id/selectedUsersList"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="150dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/searchUserBar" />
 
@@ -119,7 +119,6 @@
             android:textColor="@color/midnight_284261"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/searchUserBar" />
-
 
     </LinearLayout>
 

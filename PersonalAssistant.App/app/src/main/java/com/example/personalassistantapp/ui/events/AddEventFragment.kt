@@ -7,50 +7,77 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.EditText
-import com.example.personalassistantapp.R
-import com.example.personalassistantapp.R.id
+import android.widget.ListView
 import com.example.personalassistantapp.databinding.FragmentAddEventBinding
-import com.example.personalassistantapp.databinding.FragmentEventsBinding
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
 class AddEventFragment : Fragment() {
+
+    private lateinit var searchUserBar: AutoCompleteTextView
+    private lateinit var selectedUsersList: ListView
+    private lateinit var selectedUsersAdapter: ArrayAdapter<String>
+    private var allUsers: List<String> = listOf("User1", "User2", "User3", "User4", "User5")
+
+
     private lateinit var eventStartDateET: EditText
     private lateinit var eventEndDateET: EditText
     private lateinit var eventStartTimeET: EditText
     private lateinit var eventEndTimeET: EditText
     private var _binding: FragmentAddEventBinding? = null
-    private var allUsers: List<String> = listOf("User1", "User2", "User3", "User4", "User5")
     private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        // Inflate the layout for this fragment
-//        return inflater.inflate(R.layout.fragment_add_event, container, false)
         _binding = FragmentAddEventBinding.inflate(inflater, container, false)
+
+        // Date and time PICKERS
         eventStartDateET = binding.eventStartDateET
         eventEndDateET = binding.eventEndDateET
         eventStartTimeET = binding.eventStartTimeET
         eventEndTimeET = binding.eventEndTimeET
 
-        // Set click listeners for date and time EditText fields
         eventStartDateET.setOnClickListener { showDatePicker(eventStartDateET) }
         eventEndDateET.setOnClickListener { showDatePicker(eventEndDateET) }
         eventStartTimeET.setOnClickListener { showTimePicker(eventStartTimeET) }
         eventEndTimeET.setOnClickListener { showTimePicker(eventEndTimeET) }
 
 
+        // INVITE USERS
+        searchUserBar = binding.searchUserBar
+        selectedUsersList = binding.selectedUsersList
+
+        // Initialize adapter for selected users list
+        selectedUsersAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1)
+        selectedUsersList.adapter = selectedUsersAdapter
+
+        // Set up ArrayAdapter for AutoCompleteTextView
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, allUsers)
+        searchUserBar.setAdapter(adapter)
+
+        // Set item click listener for AutoCompleteTextView
+        searchUserBar.setOnItemClickListener { _, _, position, _ ->
+            val selectedUser = adapter.getItem(position).toString()
+            addSelectedUser(selectedUser)
+            searchUserBar.setText("")
+        }
+
         val root: View = binding.root
         return root
+    }
+
+    private fun addSelectedUser(user: String) {
+        selectedUsersAdapter.add(user)
     }
 
     private fun showDatePicker(editText: EditText) {
