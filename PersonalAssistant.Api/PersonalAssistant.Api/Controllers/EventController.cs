@@ -2,6 +2,8 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using PersonalAssistant.Api.Helpers;
+using PersonalAssistant.Api.ViewModels;
+using PersonalAssistant.Models;
 using PersonalAssistant.Services.Interfaces;
 
 namespace PersonalAssistant.Api.Controllers
@@ -15,6 +17,20 @@ namespace PersonalAssistant.Api.Controllers
         {
             var dateInDateFromJsonString = dateHelper.GetDateFromJsonString(date);
             return Ok(await service.GetAllEventsForDate(dateInDateFromJsonString, email));
+        }
+
+        [HttpPost("CreateEvent")]
+        public async Task<ActionResult> GetAllCreateEventEventsForDate([FromQuery] string email, [FromBody] NewEventVM newEvent)
+        {
+            //Handle dates
+            //Handle invited users
+            //var dateInDateFromJsonString = dateHelper.GetDateFromJsonString(date);
+
+            var eventType = mapper.Map<Event>(newEvent);
+            await service.CreateEvent(eventType, email);
+            //var invitedUsers = newEvent.InvitedUsers;
+            //Create UserEvent for each of the users with the returned id from the creation of event
+            return Ok();
         }
     }
 }

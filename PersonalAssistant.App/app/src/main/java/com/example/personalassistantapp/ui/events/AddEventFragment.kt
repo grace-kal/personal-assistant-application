@@ -1,7 +1,9 @@
 package com.example.personalassistantapp.ui.events
 
+import android.R
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -12,16 +14,27 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ListView
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import com.example.personalassistantapp.LoginActivity
 import com.example.personalassistantapp.databinding.FragmentAddEventBinding
 import com.example.personalassistantapp.helpers.ApiRequestHelper
+import com.example.personalassistantapp.helpers.HashHelper
+import com.example.personalassistantapp.helpers.TokenManager
+import com.example.personalassistantapp.helpers.constantValues.StaticValues
+import com.example.personalassistantapp.models.Event
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import org.json.JSONArray
+import org.json.JSONObject
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -30,17 +43,22 @@ import java.util.Locale
 
 class AddEventFragment : Fragment() {
     private val client = OkHttpClient()
+    private lateinit var _tokenManager: TokenManager
 
     private lateinit var searchUserBar: AutoCompleteTextView
     private lateinit var selectedUsersList: ListView
     private lateinit var selectedUsersAdapter: ArrayAdapter<String>
-    private var allUsers: MutableList<String> = mutableListOf("test@gmail.com","myuser@gmail.com","testtest@gmail.com", "tester@abv.bg")
-
+    private var allUsers: MutableList<String> =
+        mutableListOf("test@gmail.com", "myuser@gmail.com", "testtest@gmail.com", "tester@abv.bg")
 
     private lateinit var eventStartDateET: EditText
     private lateinit var eventEndDateET: EditText
     private lateinit var eventStartTimeET: EditText
     private lateinit var eventEndTimeET: EditText
+
+    private var eventTitle: EditText? = null
+    private var eventDescription: EditText? = null
+
     private var _binding: FragmentAddEventBinding? = null
     private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,8 +70,104 @@ class AddEventFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentAddEventBinding.inflate(inflater, container, false)
+        _tokenManager = TokenManager(requireContext())
 
-        // Date and time PICKERS
+        eventTitle = binding.eventTitleET
+        eventDescription = binding.eventDescriptionET
+
+        // PICKERS Date and time
+        setPickersForDateAndTime()
+
+        // INVITE USERS
+        inviteUsersSearchBarAndList()
+
+        //ADD EVENT
+        binding.createBtn.setOnClickListener() {
+            if (eventTitle?.text.toString().isEmpty()
+                || eventDescription?.text.toString().isEmpty()
+            ) {
+//                Toast.makeText(
+//                    this, "Please enter all fields and make sure both passwords match",
+//                    Toast.LENGTH_LONG
+//                ).show()
+            } else {
+                if (_tokenManager.getEmailFromToken()?.isNotEmpty() == true) {
+                    val event = Event(
+                        null,
+                        eventTitle!!.text.toString(),
+                        eventDescription!!.text.toString(),
+                        null,
+                        eventStartDateET.text.toString(),
+                        eventEndDateET.text.toString(),
+                        eventStartTimeET.text.toString(),
+                        eventEndTimeET.text.toString()
+                    )
+                    addEvent(event)
+                }
+            }
+        }
+        val root: View = binding.root
+        return root
+    }
+
+    private fun addEvent(event: Event) {
+        var baseUrl =
+            ApiRequestHelper.HOSTADDRESS + ApiRequestHelper.EVENTSCONTROLLER + ApiRequestHelper.CREATE_EVENT_ENDPOINT_EVENTCONTROLLER
+        val urlString = ApiRequestHelper.valuesBuilder(baseUrl,"email=${_tokenManager.getEmailFromToken()}")
+
+        val jsonMediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
+
+        // Example JSON data
+        val jsonBody = """
+            {
+              "title": "${event.title}",
+              "description": "${event.description}",
+              "startDate": "${event.startDate}",
+              "endDate": "${event.endDate}",
+              "startTime": "${event.startTime}",
+              "endTime": "${event.endTime}"
+            }
+        """.trimIndent()
+
+
+        val requestBody: RequestBody = jsonBody.toRequestBody(jsonMediaType)
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val request = Request
+                    .Builder()
+                    .url(urlString)
+                    .post(requestBody)
+                    .build()
+                withContext(Dispatchers.Main) {
+                    findNavController().navigate(com.example.personalassistantapp.R.id.action_addEventsFragment_to_eventsFragment)
+                }
+            } catch (e: IOException) {
+                Log.e("FetchApiData", "Exception: ${e.message}")
+            }
+        }
+    }
+
+    private fun inviteUsersSearchBarAndList() {
+        //        loadUsersToInvite()
+        searchUserBar = binding.searchUserBar
+        selectedUsersList = binding.selectedUsersList
+
+        selectedUsersAdapter = ArrayAdapter(requireContext(), R.layout.simple_list_item_1)
+        selectedUsersList.adapter = selectedUsersAdapter
+
+        val adapter =
+            ArrayAdapter(requireContext(), R.layout.simple_dropdown_item_1line, allUsers)
+        searchUserBar.setAdapter(adapter)
+
+        searchUserBar.setOnItemClickListener { _, _, position, _ ->
+            val selectedUser = adapter.getItem(position).toString()
+            addSelectedUser(selectedUser)
+            searchUserBar.setText("")
+        }
+    }
+
+    private fun setPickersForDateAndTime() {
         eventStartDateET = binding.eventStartDateET
         eventEndDateET = binding.eventEndDateET
         eventStartTimeET = binding.eventStartTimeET
@@ -63,28 +177,6 @@ class AddEventFragment : Fragment() {
         eventEndDateET.setOnClickListener { showDatePicker(eventEndDateET) }
         eventStartTimeET.setOnClickListener { showTimePicker(eventStartTimeET) }
         eventEndTimeET.setOnClickListener { showTimePicker(eventEndTimeET) }
-
-
-        // INVITE USERS
-//        loadUsersToInvite()
-        searchUserBar = binding.searchUserBar
-        selectedUsersList = binding.selectedUsersList
-
-        selectedUsersAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1)
-        selectedUsersList.adapter = selectedUsersAdapter
-
-        val adapter =
-            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, allUsers)
-        searchUserBar.setAdapter(adapter)
-
-        searchUserBar.setOnItemClickListener { _, _, position, _ ->
-            val selectedUser = adapter.getItem(position).toString()
-            addSelectedUser(selectedUser)
-            searchUserBar.setText("")
-        }
-
-        val root: View = binding.root
-        return root
     }
 
     private fun loadUsersToInvite() {
@@ -101,7 +193,7 @@ class AddEventFragment : Fragment() {
                 val response: Response = client.newCall(request).execute()
                 if (response.isSuccessful) {
                     response.body?.string()?.let { jsonString ->
-                        withContext(Dispatchers.Main){
+                        withContext(Dispatchers.Main) {
                             parseJsonToList(jsonString)
                         }
                     }

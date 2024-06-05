@@ -65,8 +65,8 @@ class EventsViewModel : ViewModel() {
     private fun parseJsonEventsList(jsonObj: JSONArray): List<Event> {
         Log.w("Events response:", "jj")
         return listOf(
-            Event("00:00", "IMPLEMENT", "Description 1"),
-            Event("00:00", "Task 2", "Description 2")
+            Event("00:00", "IMPLEMENT", "Description 1", null, null, null, null, null),
+            Event("00:00", "Task 2", "Description 2",null, null, null, null, null)
         )
 
 //        val events = mutableListOf<Event>()

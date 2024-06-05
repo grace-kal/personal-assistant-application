@@ -10,5 +10,12 @@ namespace PersonalAssistant.Api.Helpers
 
             return DateTime.ParseExact(date, format, System.Globalization.CultureInfo.InvariantCulture);
         }
+
+        public DateTime GetTimeFromJsonString(string time)
+        {
+            const string format = "hh-mm";
+
+            return DateTime.ParseExact(time, format, System.Globalization.CultureInfo.InvariantCulture);
+        }
     }
 }

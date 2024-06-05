@@ -17,18 +17,18 @@ public class ApiRequestHelper {
     public static final String LOGIN_ENDPOINT_USERCONTROLLER = "/Login";
     public static final String ALLUSEREMAILS_ENDPOINT_USERCONTROLLER = "/AllUserEmails";
 
-//    Weather controller methods
+    //    Weather controller methods
     public static final String CITIES_FOR_COUNTRY_ENDPOINT_WEATHERCONTROLLER = "/Cities";
 
-//    Event controller methods
-public static final String GET_ALL_EVENTS_FOR_DATE_ENDPOINT_EVENTCONTROLLER = "/GetAllEventsForDate";
-
     //    Event controller methods
+    public static final String GET_ALL_EVENTS_FOR_DATE_ENDPOINT_EVENTCONTROLLER = "/GetAllEventsForDate";
+    public static final String CREATE_EVENT_ENDPOINT_EVENTCONTROLLER = "/CreateEvent";
+
+    //    Tasks controller methods
     public static final String GET_ALL_TASKS_FOR_DATE_ENDPOINT_TASKCONTROLLER = "/GetAllTasksForDate";
 
-    //    Event controller methods
+    //    Notes controller methods
     public static final String GET_ALL_NOTES_FOR_DATE_ENDPOINT_NOTECONTROLLER = "/GetAllNotesForDate";
-
 
 
     public static String urlBuilder(String controller, String method) {

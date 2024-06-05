@@ -23,8 +23,7 @@ namespace PersonalAssistant.Models
         [Required]
         public DateTime ToDateTime { get; set; }
 
-        [Required]
-        public required string TimeZone { get; set; }
+        public string? TimeZone { get; set; }
 
         public bool IsWholeDay { get; set; }
 
