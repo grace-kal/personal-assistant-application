@@ -13,6 +13,12 @@ namespace PersonalAssistant.Api.Controllers
     [ApiController]
     public class UserController(IMapper mapper, IUserService userService) : ControllerBase
     {
+        [HttpPost("AllUserEmails")]
+        public async Task<IEnumerable<string>> Register()
+        {
+            return await userService.AllUserEmails();
+        }
+
         [HttpPost("Register")]
         public async Task<ActionResult> Register([FromBody] RegisterUserVm request)
         {

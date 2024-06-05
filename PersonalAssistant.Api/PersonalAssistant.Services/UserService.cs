@@ -1,4 +1,6 @@
-﻿using PersonalAssistant.DataAccess.Interfaces;
+﻿using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Mvc;
+using PersonalAssistant.DataAccess.Interfaces;
 using PersonalAssistant.Models;
 using PersonalAssistant.Services.Interfaces;
 using Task = System.Threading.Tasks.Task;
@@ -48,6 +50,11 @@ namespace PersonalAssistant.Services
         public async Task<User?> Login(User user)
         {
             return await repository.Login(user);
+        }
+
+        public async Task<IEnumerable<string>> AllUserEmails()
+        {
+            return await repository.AllUserEmails();
         }
     }
 }

@@ -13,5 +13,6 @@ namespace PersonalAssistant.DataAccess.Interfaces
         Task<bool> UserEmailExists(string email);
         Task<bool> RegisterUser(User user);
         Task<User?> Login(User user);
+        Task<IEnumerable<string?>?> AllUserEmails();
     }
 }

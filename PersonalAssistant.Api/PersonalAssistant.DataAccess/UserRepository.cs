@@ -46,5 +46,12 @@ namespace PersonalAssistant.DataAccess
 
             return user.PasswordHash == result.PasswordHash ? result : null;
         }
+
+        public async Task<IEnumerable<string?>?> AllUserEmails()
+        {
+            var users = context.Users.ToList();
+            return users.Select(u => u.Email);
+
+        }
     }
 }

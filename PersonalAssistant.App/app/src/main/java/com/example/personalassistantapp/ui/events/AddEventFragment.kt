@@ -3,6 +3,7 @@ package com.example.personalassistantapp.ui.events
 import android.app.DatePickerDialog
 import android.app.TimePickerDialog
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -11,18 +12,29 @@ import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.ListView
+import androidx.lifecycle.lifecycleScope
 import com.example.personalassistantapp.databinding.FragmentAddEventBinding
+import com.example.personalassistantapp.helpers.ApiRequestHelper
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import org.json.JSONArray
+import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
 class AddEventFragment : Fragment() {
+    private val client = OkHttpClient()
 
     private lateinit var searchUserBar: AutoCompleteTextView
     private lateinit var selectedUsersList: ListView
     private lateinit var selectedUsersAdapter: ArrayAdapter<String>
-    private var allUsers: List<String> = listOf("User1", "User2", "User3", "User4", "User5")
+    private var allUsers: MutableList<String> = mutableListOf("test@gmail.com","myuser@gmail.com","testtest@gmail.com", "tester@abv.bg")
 
 
     private lateinit var eventStartDateET: EditText
@@ -54,18 +66,17 @@ class AddEventFragment : Fragment() {
 
 
         // INVITE USERS
+//        loadUsersToInvite()
         searchUserBar = binding.searchUserBar
         selectedUsersList = binding.selectedUsersList
 
-        // Initialize adapter for selected users list
         selectedUsersAdapter = ArrayAdapter(requireContext(), android.R.layout.simple_list_item_1)
         selectedUsersList.adapter = selectedUsersAdapter
 
-        // Set up ArrayAdapter for AutoCompleteTextView
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, allUsers)
+        val adapter =
+            ArrayAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line, allUsers)
         searchUserBar.setAdapter(adapter)
 
-        // Set item click listener for AutoCompleteTextView
         searchUserBar.setOnItemClickListener { _, _, position, _ ->
             val selectedUser = adapter.getItem(position).toString()
             addSelectedUser(selectedUser)
@@ -74,6 +85,42 @@ class AddEventFragment : Fragment() {
 
         val root: View = binding.root
         return root
+    }
+
+    private fun loadUsersToInvite() {
+        val url = ApiRequestHelper.urlBuilder(
+            ApiRequestHelper.USERCONTROLLER,
+            ApiRequestHelper.ALLUSEREMAILS_ENDPOINT_USERCONTROLLER
+        )
+
+        lifecycleScope.launch(Dispatchers.IO) {
+            try {
+                val request = Request.Builder()
+                    .url(url)
+                    .build()
+                val response: Response = client.newCall(request).execute()
+                if (response.isSuccessful) {
+                    response.body?.string()?.let { jsonString ->
+                        withContext(Dispatchers.Main){
+                            parseJsonToList(jsonString)
+                        }
+                    }
+                } else {
+                    Log.e("FetchApiData", "Error response code: ${response.code}")
+                }
+            } catch (e: IOException) {
+                Log.e("FetchApiData", "Exception: ${e.message}")
+            }
+        }
+    }
+
+    private fun parseJsonToList(jsonString: String) {
+        val jsonArray = JSONArray(jsonString)
+        allUsers.clear()
+        for (i in 0 until jsonArray.length()) {
+            val user = jsonArray.getString(i)
+            allUsers.add(user)
+        }
     }
 
     private fun addSelectedUser(user: String) {
