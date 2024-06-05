@@ -4,18 +4,21 @@ namespace PersonalAssistant.Api.Helpers
 {
     public class DateTimeHelper
     {
+        const string DateFormat = "yyyy-MM-dd";
+        const string TimeFormat = "hh-mm";
+        const string DateTimeFormat = "yyyy-MM-ddThh-mm";
+
+
         public DateTime GetDateFromJsonString(string date)
         {
-            const string format = "yyyy-MM-dd";
 
-            return DateTime.ParseExact(date, format, System.Globalization.CultureInfo.InvariantCulture);
+            return DateTime.ParseExact(date, DateFormat, System.Globalization.CultureInfo.InvariantCulture);
         }
 
-        public DateTime GetTimeFromJsonString(string time)
+        public DateTime GetDateTimeFromJsonString(string? date, string? time)
         {
-            const string format = "hh-mm";
-
-            return DateTime.ParseExact(time, format, System.Globalization.CultureInfo.InvariantCulture);
+            var dateTimeString = $"{date}T{time}";
+            return DateTime.ParseExact(dateTimeString, DateTimeFormat, System.Globalization.CultureInfo.InvariantCulture);
         }
     }
 }

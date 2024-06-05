@@ -20,13 +20,23 @@ namespace PersonalAssistant.Api.Controllers
         }
 
         [HttpPost("CreateEvent")]
-        public async Task<ActionResult> GetAllCreateEventEventsForDate([FromQuery] string email, [FromBody] NewEventVM newEvent)
+        public async Task<ActionResult> CreateEvent([FromQuery] string email, [FromBody] NewEventVM newEvent)
         {
             //Handle dates
             //Handle invited users
             //var dateInDateFromJsonString = dateHelper.GetDateFromJsonString(date);
 
             var eventType = mapper.Map<Event>(newEvent);
+            try
+            {
+                eventType.FromDateTime = dateHelper.GetDateTimeFromJsonString(newEvent.StartDate, newEvent.StartTime);
+                eventType.ToDateTime = dateHelper.GetDateTimeFromJsonString(newEvent.EndDate, newEvent.EndTime);
+            }
+            catch (Exception e)
+            {
+                //ignore
+            }
+            
             await service.CreateEvent(eventType, email);
             //var invitedUsers = newEvent.InvitedUsers;
             //Create UserEvent for each of the users with the returned id from the creation of event
