@@ -12,6 +12,15 @@ namespace PersonalAssistant.Api.Controllers
     [ApiController]
     public class ChatController(IMapper mapper, IChatService service, OpenAIAPI openAiApi) : Controller
     {
+        //[HttpGet("GetChatHistory")]
+        //public async Task<IActionResult> GetChatHistory([FromQuery] string email, string chatId)
+        //{
+        //    var messages = await service.GetChatHistory(email,int.Parse(chatId));
+        //    var list = messages.ToList().ToList();
+        //    var messagesVm = list.Select(mapper.Map<MessageVM>);
+        //    return Ok(messagesVm);
+        //}
+
         [HttpGet("GetUserChats")]
         public async Task<IActionResult> GetUserChats([FromQuery] string email)
         {
