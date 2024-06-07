@@ -31,14 +31,14 @@ class OneChatFragment : Fragment() {
     private lateinit var _tokenManager: TokenManager
     private lateinit var _messageAdapter: MessageAdapter
     private var _binding: FragmentOneChatBinding? = null
+    private var _chatId: String? = null
     private val binding get() = _binding!!
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentOneChatBinding.inflate(inflater, container, false)
         _tokenManager = TokenManager(requireContext())
@@ -52,7 +52,7 @@ class OneChatFragment : Fragment() {
             binding.sendButton.setOnClickListener {
                 val userMessage = binding.messageEditText.text.toString()
                 if (userMessage.isNotEmpty()) {
-                    addMessageToChat(userMessage, true)
+                    addMessageToChat(userMessage, true, _chatId)
                     sendMessageToApi(userMessage, _tokenManager.getEmailFromToken()!!)
                     binding.messageEditText.text.clear()
                 }
@@ -65,23 +65,21 @@ class OneChatFragment : Fragment() {
 
     private fun sendMessageToApi(userMessage: String, emailFromToken: String) {
         val baseUrl = ApiRequestHelper.urlBuilder(
-            ApiRequestHelper.CHATSCONTROLLER,
-            ApiRequestHelper.NEW_MESSAGE_ENDPOINT_CHATCONTROLLER
+            ApiRequestHelper.CHATSCONTROLLER, ApiRequestHelper.NEW_MESSAGE_ENDPOINT_CHATCONTROLLER
         )
 
         var isInitialMessage: Boolean = false
-        if (_messageAdapter.itemCount <= 1)
-            isInitialMessage = true
+        if (_messageAdapter.itemCount <= 1) isInitialMessage = true
 
-        var url =
-            ApiRequestHelper.valuesBuilder(
-                baseUrl,
-                "email=${emailFromToken}&isInitialMessage=${isInitialMessage}"
-            )
+        val url = ApiRequestHelper.valuesBuilder(
+            baseUrl, "email=${emailFromToken}&isInitialMessage=${isInitialMessage}"
+        )
 
         val jsonMediaType = "application/json; charset=utf-8".toMediaTypeOrNull()
+
         val jsonBody = """
             {
+              "chatId" : "${_chatId ?: ""}",
               "content": "$userMessage"
             }
         """.trimIndent()
@@ -91,11 +89,7 @@ class OneChatFragment : Fragment() {
 
         lifecycleScope.launch(Dispatchers.IO) {
             try {
-                val request = Request
-                    .Builder()
-                    .url(url)
-                    .post(requestBody)
-                    .build()
+                val request = Request.Builder().url(url).post(requestBody).build()
                 val response = client.newCall(request).execute()
                 val responseData = response.body?.string()
 
@@ -117,18 +111,18 @@ class OneChatFragment : Fragment() {
             val jsonObject = JSONObject(responseData)
             val content = jsonObject.getString("content")
             val fromRobot = jsonObject.getBoolean("fromRobot")
-            addMessageToChat(content, !fromRobot)
+            val chatId = jsonObject.getString("chatId")
+            _chatId = chatId
+            addMessageToChat(content, !fromRobot, chatId)
 
         } catch (e: Exception) {
             Log.e("HandleResponseData", "Exception: ${e.message}")
         }
     }
 
-    private fun addMessageToChat(message: String, isUser: Boolean) {
-        val newMessage = Message(message, isUser)
+    private fun addMessageToChat(message: String, isUser: Boolean, chatId: String?) {
+        val newMessage = Message(message, isUser, chatId)
         _messageAdapter.addMessage(newMessage)
         binding.messagesRecyclerView.scrollToPosition(_messageAdapter.itemCount - 1)
     }
-
-
 }

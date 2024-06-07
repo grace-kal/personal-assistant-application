@@ -12,7 +12,7 @@ using OpenAI_API;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddSingleton(new OpenAIAPI("sk-proj-gxACBvL40yJPXhjTAj8QT3BlbkFJLxBT2tVEezMcEUbYtb4J"));
+builder.Services.AddSingleton(new OpenAIAPI(Environment.GetEnvironmentVariable("MY_ASSISTANT_GPT_KEY")));
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<Context>(options =>

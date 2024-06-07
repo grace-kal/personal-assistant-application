@@ -24,7 +24,7 @@ namespace PersonalAssistant.Models
 
         [ForeignKey(nameof(User))]
         public required string SenderId { get; set; }
-        public required User Sender { get; set; }
+        public User? Sender { get; set; }
 
         public IEnumerable<Message>? Messages { get; set; }
     }

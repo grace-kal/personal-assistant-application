@@ -13,12 +13,13 @@ namespace PersonalAssistant.Models
         [Key]
         public int Id { get; set; }
         public bool FromRobot{ get; set; }
+        public DateTime CreatedAt{ get; set; }
 
         [Required]
         public required string Content { get; set; }
 
         [ForeignKey(nameof(Chat))]
         public required int ChatId { get; set; }
-        public required Chat Chat { get; set; }
+        public Chat? Chat { get; set; }
     }
 }
