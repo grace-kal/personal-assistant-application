@@ -2,6 +2,7 @@
 {
     public class EventVM
     {
+        public string? Id { get; set; }
         public required string Title { get; set; }
         public required string Description { get; set; }
         public string? StartDate { get; set; }

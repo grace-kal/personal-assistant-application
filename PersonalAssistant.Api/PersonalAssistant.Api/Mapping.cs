@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.Blazor;
 using PersonalAssistant.Api.ViewModels;
 using PersonalAssistant.Models;
 
@@ -13,6 +12,8 @@ namespace PersonalAssistant.Api
             CreateMap<LoginUserVm, User>();
 
             CreateMap<EventVM, Event>();
+
+            CreateMap<Chat, ChatVM>();
         }
 
     }

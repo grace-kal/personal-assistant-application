@@ -36,6 +36,7 @@ namespace PersonalAssistant.Api.Controllers
             {
                 var eVM = new EventVM()
                 {
+                    Id = e.Id.ToString(),
                     Title = e.Title,
                     Description = e.Description,
                     StartDate = e.FromDateTime.Date.ToString("yyyy-MM-dd"),

@@ -7,11 +7,12 @@ using PersonalAssistant.DataAccess.Interfaces;
 using PersonalAssistant.Models;
 using PersonalAssistant.Services;
 using PersonalAssistant.Services.Interfaces;
+using OpenAI_API;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddSingleton(new OpenAIAPI("sk-proj-gxACBvL40yJPXhjTAj8QT3BlbkFJLxBT2tVEezMcEUbYtb4J"));
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<Context>(options =>
@@ -28,11 +29,13 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<INoteService, NoteService>();
+builder.Services.AddScoped<IChatService, ChatService>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<INoteRepository, NoteRepository>();
+builder.Services.AddScoped<IChatRepository, ChatRepository>();
 
 builder.Services.AddIdentity<User, IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
     .AddRoles<IdentityRole>()

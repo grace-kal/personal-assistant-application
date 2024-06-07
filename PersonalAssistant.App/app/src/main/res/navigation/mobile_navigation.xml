@@ -55,11 +55,20 @@
 
     <fragment
         android:id="@+id/nav_contact_support"
-        android:name="com.example.personalassistantapp.ui.slideshow.SlideshowFragment"
+        android:name="com.example.personalassistantapp.ui.chats.ChatsFragment"
         android:label="@string/menu_contact_support"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/fragment_chats" >
+        <action
+            android:id="@+id/action_chatsFragment_to_oneChatFragment"
+            app:destination="@id/newChatFragment" />
+    </fragment>
 
-<!--Navigation from events page to the add event and back-->
+    <fragment
+        android:id="@+id/newChatFragment"
+        android:name="com.example.personalassistantapp.ui.chats.OneChatFragment"
+        android:label="New chat"
+        tools:layout="@layout/fragment_one_chat" >
+    </fragment>
 
     <fragment
         android:id="@+id/nav_events"

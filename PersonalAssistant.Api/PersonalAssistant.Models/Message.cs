@@ -12,6 +12,7 @@ namespace PersonalAssistant.Models
     {
         [Key]
         public int Id { get; set; }
+        public bool FromRobot{ get; set; }
 
         [Required]
         public required string Content { get; set; }
