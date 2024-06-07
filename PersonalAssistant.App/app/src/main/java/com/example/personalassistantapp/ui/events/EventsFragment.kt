@@ -49,6 +49,7 @@ class EventsFragment : Fragment() {
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             _selectedDate = dateFormat.format(calendar.time)
             _userEmail = _tokenManager.getEmailFromToken()
+
             viewModel.init(_userEmail, _selectedDate)
 
 //            if(homeViewModel.events.value? !=null) do this check if i want text when no items
@@ -61,7 +62,6 @@ class EventsFragment : Fragment() {
             binding.eventsList.adapter = _eventsAdapter
         }
 
-
         // Set date change listener
         binding.calendarView.setOnDateChangeListener(OnDateChangeListener { _, year, month, dayOfMonth ->
             val calendar = Calendar.getInstance()
@@ -71,7 +71,7 @@ class EventsFragment : Fragment() {
 
             // Fetch events for the selected date
             viewModel.init(_userEmail, selectedDate)
-
+            _eventsAdapter.notifyDataSetChanged()
         })
 
         binding.createBtn.setOnClickListener {

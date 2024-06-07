@@ -12,6 +12,8 @@ namespace PersonalAssistant.Api.Controllers
     [ApiController]
     public class ChatController(IMapper mapper, IChatService service, OpenAIAPI openAiApi) : Controller
     {
+        private const string PromptContext =
+            "I'm contacting you from a application that has overview page, where the user can see their events, tasks, notes. The app has a events page where teh user can see their events, notes page where user can find notes, tasks page where user can see their tasks. Wardrobe page where user can upload and see their clothes. News page to see teh latest news. Contact and support page where the user can contact the ai assistant. If they want to contact customer support or need any other help regarding the application they can email: kalinina.grace@gmail.com or call 02345678. This is the context from which the user contacts you. This is the user message you need to simply answer:";
         //[HttpGet("GetChatHistory")]
         //public async Task<IActionResult> GetChatHistory([FromQuery] string email, string chatId)
         //{
@@ -67,8 +69,8 @@ namespace PersonalAssistant.Api.Controllers
                 // Add the new message to the history
                 conversationHistory.Add(newUserMessage);
 
-                var prompt = string.Join("\n", conversationHistory.Select(m => m.FromRobot ? $"AI: {m.Content}" : $"User: {m.Content}"));
-
+                //var promptFromMessages = string.Join("\n", conversationHistory.Select(m => m.FromRobot ? $"AI: {m.Content}" : $"User: {m.Content}"));
+                var promptFull =string.Join("\n",new List<string>{ PromptContext ,message.Content});
                 #region Calling with exact model
                 //calling exact model
                 ////"text-davinci-003" aka GPT-3.5)
@@ -83,7 +85,7 @@ namespace PersonalAssistant.Api.Controllers
                 //var responseText = result.Completions[0].Text.Trim();
                 #endregion
 
-                var result = await openAiApi.Completions.CreateCompletionAsync(prompt, max_tokens: 50);
+                var result = await openAiApi.Completions.CreateCompletionAsync(promptFull, max_tokens: 50);
                 var responseText = result.ToString();
 
                 var newAiMessage = new Message
