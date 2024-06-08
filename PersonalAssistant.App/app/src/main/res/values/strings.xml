@@ -37,4 +37,5 @@
     <string name="new_chat_btn">New chat</string>
     <string name="sendBtn">Send</string>
     <string name="type_a_message_hint">Type a message</string>
+    <string name="add_cloth_btn">Add new</string>
 </resources>

@@ -43,9 +43,20 @@
 
     <fragment
         android:id="@+id/nav_wardrobe"
-        android:name="com.example.personalassistantapp.ui.slideshow.SlideshowFragment"
+        android:name="com.example.personalassistantapp.ui.wardrobe.WardrobeFragment"
         android:label="@string/menu_wardrobe"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/fragment_wardrobe">
+        <action
+            android:id="@+id/action_wardrobeFragment_to_addClothFragment"
+            app:destination="@id/addClothFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/addClothFragment"
+        android:name="com.example.personalassistantapp.ui.wardrobe.AddClothFragment"
+        android:label="Add event"
+        tools:layout="@layout/fragment_add_cloth" >
+    </fragment>
 
     <fragment
         android:id="@+id/nav_news"
@@ -89,4 +100,6 @@
             android:id="@+id/action_addEventsFragment_to_eventsFragment"
             app:destination="@id/nav_events" />
     </fragment>
+
+
 </navigation>

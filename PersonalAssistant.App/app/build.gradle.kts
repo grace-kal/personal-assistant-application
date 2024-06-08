@@ -59,5 +59,8 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 //    Lombok
     annotationProcessor (libs.projectlombok.lombok)
+    implementation (libs.glide)
+    annotationProcessor (libs.compiler)
+
 
 }
