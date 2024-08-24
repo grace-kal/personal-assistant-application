@@ -8,11 +8,19 @@ using PersonalAssistant.Models;
 using PersonalAssistant.Services;
 using PersonalAssistant.Services.Interfaces;
 using OpenAI_API;
+using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+//Env var TODO add
 builder.Services.AddSingleton(new OpenAIAPI(Environment.GetEnvironmentVariable("MY_ASSISTANT_GPT_KEY")));
+builder.Services.AddSingleton(new ComputerVisionClient(new ApiKeyServiceClientCredentials(Environment.GetEnvironmentVariable("AZURE_VISION_API_KEY")))
+{
+    Endpoint = Environment.GetEnvironmentVariable("AZURE_VISION_API_ENDPOINT")
+});
+
+
 builder.Services.AddControllers();
 
 builder.Services.AddDbContext<Context>(options =>

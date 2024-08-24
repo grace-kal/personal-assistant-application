@@ -9,7 +9,7 @@ public class ApiRequestHelper {
     public static final String TASKSCONTROLLER = "/Task";
     public static final String NOTESCONTROLLER = "/Note";
     public static final String CHATSCONTROLLER = "/Chat";
-    public static final String WARDROBECONTROLLER = "";
+    public static final String WARDROBECONTROLLER = "/Wardrobe";
     public static final String WEATHERCONTROLLER = "/Weather";
 
 
@@ -31,11 +31,12 @@ public class ApiRequestHelper {
     //    Notes controller methods
     public static final String GET_ALL_NOTES_FOR_DATE_ENDPOINT_NOTECONTROLLER = "/GetAllNotesForDate";
 
-//    Chats controller methods
-public static final String GET_USER_CHATS_ENDPOINT_CHATCONTROLLER = "/GetUserChats";
-public static final String NEW_MESSAGE_ENDPOINT_CHATCONTROLLER = "/NewMessage";
+    //    Chats controller methods
+    public static final String GET_USER_CHATS_ENDPOINT_CHATCONTROLLER = "/GetUserChats";
+    public static final String NEW_MESSAGE_ENDPOINT_CHATCONTROLLER = "/NewMessage";
 
-
+    //    Wardrobe controller methods
+    public static final String ADD_NEW_CLOTH_ENDPOINT_WARDROBECONTROLLER = "/AddNewCloth";
 
 
     public static String urlBuilder(String controller, String method) {
