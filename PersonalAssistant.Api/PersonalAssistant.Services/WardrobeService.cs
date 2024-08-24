@@ -1,13 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PersonalAssistant.DataAccess.Interfaces;
+using PersonalAssistant.Models;
 using PersonalAssistant.Services.Interfaces;
+using Task = System.Threading.Tasks.Task;
 
 namespace PersonalAssistant.Services
 {
-    public class WardrobeService : IWardrobeService
+    public class WardrobeService(IWardrobeRepository repository) : IWardrobeService
     {
+        public async Task CreateClothItems(Cloth newCloth, string email)
+        {
+            await repository.CreateClothItems(newCloth, email);
+        }
     }
 }

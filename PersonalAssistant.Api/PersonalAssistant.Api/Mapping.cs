@@ -15,6 +15,9 @@ namespace PersonalAssistant.Api
 
             CreateMap<Chat, ChatVM>();
             CreateMap<Message, MessageVM>();
+            
+            CreateMap<Cloth, ClothVM>();
+            CreateMap<ClothVM, Cloth>();
         }
 
     }

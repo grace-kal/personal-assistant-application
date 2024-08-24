@@ -1,4 +1,5 @@
-﻿using PersonalAssistant.Models.Enums;
+﻿using Microsoft.AspNetCore.Http;
+using PersonalAssistant.Models.Enums;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,10 +19,13 @@ namespace PersonalAssistant.Models
         [Required]
         public required string Title { get; set; }
 
-        [Required]
-        public required string Description { get; set; }
+        public  string? DescriptionUser { get; set; }
+        public  string? DescriptionAi { get; set; }
+        public string? BlobUri { get; set; }
 
-        //public Stream? Image { get; set; }
+        [NotMapped]
+        public IFormFile? Image { get; set; }
+
 
         [Required]
         public required Season Season { get; set; }

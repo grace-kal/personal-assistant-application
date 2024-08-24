@@ -1,45 +1,43 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
 using OpenAI_API;
 using PersonalAssistant.Api.ViewModels;
+using PersonalAssistant.Models;
 using PersonalAssistant.Services.Interfaces;
 
 namespace PersonalAssistant.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class WardrobeController(IWardrobeService service, ComputerVisionClient computerVisionClient) : Controller
+    public class WardrobeController(IWardrobeService service, ComputerVisionClient computerVisionClient, IMapper mapper) : Controller
     {
         [HttpPost("AddNewCloth")]
         public async Task<IActionResult> AddCloth([FromQuery] string email, [FromForm] ClothVM? model)
         {
             try
             {
-                var descriptionAI = "";
+                var newCloth = mapper.Map<Cloth>(model);
 
-                //image recognition -get description
                 if (model.Image != null || model.Image?.Length > 0)
                 {
                     try
                     {
-                        descriptionAI = await AnalyzeImageAsync(model.Image);
+                        newCloth.DescriptionAi = await AnalyzeImageAsync(model.Image);
                     }
                     catch (Exception ex)
                     {
                     }
                 }
-                //save in sql with both descriptions
 
-
-                //save in blob with id of the created cloth
+                await service.CreateClothItems(newCloth, email);
+                return Ok();
             }
             catch (Exception ex)
             {
                 return Ok();
             }
-
-            return Ok();
         }
 
         private async Task<string> AnalyzeImageAsync(IFormFile image)
