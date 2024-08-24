@@ -38,6 +38,7 @@ builder.Services.AddScoped<IEventService, EventService>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<INoteService, NoteService>();
 builder.Services.AddScoped<IChatService, ChatService>();
+builder.Services.AddScoped<IWardrobeService, WardrobeService>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IEventRepository, EventRepository>();
