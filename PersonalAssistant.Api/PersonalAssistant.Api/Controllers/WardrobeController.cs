@@ -12,7 +12,7 @@ namespace PersonalAssistant.Api.Controllers
     public class WardrobeController(IWardrobeService service, ComputerVisionClient computerVisionClient) : Controller
     {
         [HttpPost("AddNewCloth")]
-        public async Task<IActionResult> AddCloth([FromQuery] string email, [FromBody] ClothVM model)
+        public async Task<IActionResult> AddCloth([FromQuery] string email, [FromForm] ClothVM? model)
         {
             try
             {

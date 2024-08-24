@@ -101,7 +101,7 @@ class AddClothFragment : Fragment() {
                     .build()
                 _client.newCall(request).execute()
                 withContext(Dispatchers.Main) {
-//                    findNavController().navigate(R.id.action_addEventsFragment_to_eventsFragment)
+                    findNavController().navigate(R.id.action_addClothFragment_to_wardrobeFragment)
                 }
             } catch (e: IOException) {
                 Log.e("FetchApiData", "Exception: ${e.message}")

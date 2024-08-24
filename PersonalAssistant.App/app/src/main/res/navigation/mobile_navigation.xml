@@ -56,6 +56,9 @@
         android:name="com.example.personalassistantapp.ui.wardrobe.AddClothFragment"
         android:label="Add event"
         tools:layout="@layout/fragment_add_cloth" >
+        <action
+            android:id="@+id/action_addClothFragment_to_wardrobeFragment"
+            app:destination="@id/nav_wardrobe" />
     </fragment>
 
     <fragment
