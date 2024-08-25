@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Azure.Storage.Blobs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using PersonalAssistant.DataAccess.Interfaces;
 using PersonalAssistant.Models;
@@ -26,6 +27,13 @@ namespace PersonalAssistant.DataAccess
             newCloth.Id = result.Entity.Id;
             if (newCloth.Id != 0)
                 await SaveToBlobStorage(newCloth);
+        }
+
+        public async Task<List<Cloth>> GetClothes(string email)
+        {
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var result = context.Clothes.Where(c => c.UserId == user.Id).ToList();
+            return result;
         }
 
         private async Task SaveToBlobStorage(Cloth newCloth)

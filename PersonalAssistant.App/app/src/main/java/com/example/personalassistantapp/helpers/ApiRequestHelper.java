@@ -37,6 +37,7 @@ public class ApiRequestHelper {
 
     //    Wardrobe controller methods
     public static final String ADD_NEW_CLOTH_ENDPOINT_WARDROBECONTROLLER = "/AddNewCloth";
+    public static final String GET_CLOTHES_ENDPOINT_WARDROBECONTROLLER = "/GetClothes";
 
 
     public static String urlBuilder(String controller, String method) {

@@ -6,5 +6,6 @@ namespace PersonalAssistant.Services.Interfaces
     public interface IWardrobeService
     {
         Task CreateClothItems(Cloth newCloth, string email);
+        Task<List<Cloth>> GetClothes(string email);
     }
 }

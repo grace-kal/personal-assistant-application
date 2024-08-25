@@ -49,6 +49,42 @@ namespace PersonalAssistant.Api.Controllers
             }
         }
 
+        [HttpGet("GetClothes")]
+        public async Task<List<ClothVM>> GetClothes([FromQuery] string email)
+        {
+            return MapClothes(await service.GetClothes(email));
+        }
+
+        private List<ClothVM> MapClothes(List<Cloth> clothes)
+        {
+            var list = new List<ClothVM>();
+            foreach (var item in clothes)
+            {
+                var newItem = new ClothVM()
+                {
+                    Id = item.Id.ToString(),
+                    Title = item.Title,
+                    Description = item.DescriptionUser,
+                    WeatherKind = Enum.GetName(item.WeatherKind),
+                    ClothArea = Enum.GetName(item.ClothArea),
+                    ClothLenght = Enum.GetName(item.ClothLenght),
+                    ClothKind = Enum.GetName(item.ClothKind),
+                    ClothThickness = Enum.GetName(item.ClothThickness),
+                    Season = Enum.GetName(item.Season),
+                    Color = item.Color,
+                    BlobUri = item.BlobUri
+                };
+                list.Add(newItem);
+            }
+
+            return list;
+        }
+
+        [HttpGet("GetOutfits")]
+        public async Task<IActionResult> GetOutfits([FromQuery] string email)
+        {
+            return Ok();
+        }
         private async Task SortVisualRecognitionInfoWithGpt(Cloth newCloth)
         {
             var promtContext =
@@ -56,7 +92,7 @@ namespace PersonalAssistant.Api.Controllers
                 $"The only answers i want is Kind (TShirt,Shirt,Top,Sweatshirt,Hoodie,Sweater,Coat,WinterJacket,BlazerJacket,Cardigan,Suitjacket,Jacket,DenimJacket,Jeans,SuitPants,Shorts,LongPants,Leggins,Skirt,Overalls,Dress,WinterDress,ThreePcsSuit,Sneakers,OfficialShoes,HighHeels,Sandals,Shoes,,Swimsuit), " +
                 $"cloth Area(,Tops,Bottoms,Over,Overall), weather kind(Hot,Warm,Neutral,Cold,Freezing), cloth length(Mini,Short,Midi,Long), cloth thickness(Thin,Medium,Thick)." +
                 $"This is a description the user provided '{newCloth.DescriptionUser}' and this is an AI visual recognition description:'{newCloth.DescriptionAi}'. Return me as result a json format answer containing all the properties i asked answered with these exact names of the prop in the json. Color, Length, Area, Kind, Thickness, WeatherKind." +
-                $"Make sure the json is correctly format so i can convert it!";
+                $"The properties names should begin with capital letters. Make sure the json is correctly formatted so i can convert it!";
 
             var result = await openAiApi.Completions.CreateCompletionAsync(promtContext, max_tokens: 50);
             var responseText = result.ToString();

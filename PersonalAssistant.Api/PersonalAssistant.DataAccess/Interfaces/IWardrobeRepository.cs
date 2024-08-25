@@ -11,5 +11,6 @@ namespace PersonalAssistant.DataAccess.Interfaces
     public interface IWardrobeRepository
     {
         Task CreateClothItems(Cloth newCloth, string email);
+        Task<List<Cloth>> GetClothes(string email);
     }
 }
