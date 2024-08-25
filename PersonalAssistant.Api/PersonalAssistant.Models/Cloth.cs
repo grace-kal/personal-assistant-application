@@ -22,6 +22,7 @@ namespace PersonalAssistant.Models
         public  string? DescriptionUser { get; set; }
         public  string? DescriptionAi { get; set; }
         public string? BlobUri { get; set; }
+        public string? Color { get; set; }
 
         [NotMapped]
         public IFormFile? Image { get; set; }

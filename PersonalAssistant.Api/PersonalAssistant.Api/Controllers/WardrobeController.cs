@@ -1,10 +1,14 @@
-﻿using AutoMapper;
+﻿using System.Text.Json;
+using AutoMapper;
+using Azure;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision;
 using Microsoft.Azure.CognitiveServices.Vision.ComputerVision.Models;
+using Microsoft.DotNet.MSIdentity.Shared;
 using OpenAI_API;
 using PersonalAssistant.Api.ViewModels;
 using PersonalAssistant.Models;
+using PersonalAssistant.Models.Enums;
 using PersonalAssistant.Services.Interfaces;
 using Task = System.Threading.Tasks.Task;
 
@@ -21,7 +25,7 @@ namespace PersonalAssistant.Api.Controllers
             {
                 var newCloth = mapper.Map<Cloth>(model);
 
-                if (model.Image != null || model.Image?.Length > 0)
+                if (model?.Image != null || model?.Image?.Length > 0)
                 {
                     try
                     {
@@ -29,6 +33,7 @@ namespace PersonalAssistant.Api.Controllers
                     }
                     catch (Exception ex)
                     {
+                        // ignored
                     }
                 }
 
@@ -47,12 +52,35 @@ namespace PersonalAssistant.Api.Controllers
         private async Task SortVisualRecognitionInfoWithGpt(Cloth newCloth)
         {
             var promtContext =
-                $"I have this description of an image. I want the info sorted as the sole object i want info on is the cloth. The only answers i want is Kind(tshirt, skirt and all possible other kinds), cloth Area(torso, head, bottom half, face, hands, overall and etc). This is a description the user provided '{newCloth.DescriptionUser}' and this is an AI visual recognition description:'{newCloth.DescriptionAi}'. Return me as result a json format answer containing all the properties i asked answeard. Color, Lenght, Area, Kind, Thickness.";
+                $"I have this description of an image. I want the info sorted as the sole object i want info on is the cloth. " +
+                $"The only answers i want is Kind (TShirt,Shirt,Top,Sweatshirt,Hoodie,Sweater,Coat,WinterJacket,BlazerJacket,Cardigan,Suitjacket,Jacket,DenimJacket,Jeans,SuitPants,Shorts,LongPants,Leggins,Skirt,Overalls,Dress,WinterDress,ThreePcsSuit,Sneakers,OfficialShoes,HighHeels,Sandals,Shoes,,Swimsuit), " +
+                $"cloth Area(,Tops,Bottoms,Over,Overall), weather kind(Hot,Warm,Neutral,Cold,Freezing), cloth length(Mini,Short,Midi,Long), cloth thickness(Thin,Medium,Thick)." +
+                $"This is a description the user provided '{newCloth.DescriptionUser}' and this is an AI visual recognition description:'{newCloth.DescriptionAi}'. Return me as result a json format answer containing all the properties i asked answered with these exact names of the prop in the json. Color, Length, Area, Kind, Thickness, WeatherKind." +
+                $"Make sure the json is correctly format so i can convert it!";
 
             var result = await openAiApi.Completions.CreateCompletionAsync(promtContext, max_tokens: 50);
             var responseText = result.ToString();
-            
-            throw new NotImplementedException();
+
+            AddInfoToCloth(newCloth, responseText);
+        }
+
+        private void AddInfoToCloth(Cloth newCloth, string responseText)
+        {
+            try
+            {
+                var response = JsonSerializer.Deserialize<ClothFeatures>(responseText);
+
+                newCloth.Color = response?.Color ?? "";
+                newCloth.ClothLenght = Enum.TryParse(response?.Length.Replace("/", "_"), out ClothLenght parsedLength) ? parsedLength : ClothLenght.Unknown;
+                newCloth.ClothArea = Enum.TryParse(response?.Area.Replace("/", "_"), out ClothArea parsedArea) ? parsedArea : ClothArea.Unknown;
+                newCloth.ClothKind = Enum.TryParse(response?.Kind, out ClothKind parsedKind) ? parsedKind : ClothKind.Unknown;
+                newCloth.ClothThickness = Enum.TryParse(response?.Thickness.Replace("/", "_"), out ClothThickness parsedThickness) ? parsedThickness : ClothThickness.Unknown;
+                newCloth.WeatherKind = Enum.TryParse(response?.WeatherKind.Replace("/", "_"), out WeatherKind parsedWeatherKind) ? parsedWeatherKind : WeatherKind.Unknown;
+            }
+            catch (Exception ex)
+            {
+                // ignored
+            }
         }
 
         private async Task<string> AnalyzeImageAsync(IFormFile image)
@@ -70,7 +98,47 @@ namespace PersonalAssistant.Api.Controllers
                 };
                 var analysis = await computerVisionClient.AnalyzeImageInStreamAsync(imageStream, features);
 
-                var detailedResult = $"Description: {analysis.Description?.Captions[0].Text}, Tags: {analysis.Tags}, Objects: {analysis.Objects}, Color: {analysis.Color}, Brands: {analysis.Brands}, Categories: {analysis.Categories}";
+                //Tags for the image
+                var tagInfo = "List of tags found in the image. ";
+                if (analysis.Tags.Count > 0)
+                    foreach (var tag in analysis.Tags)
+                    {
+                        tagInfo += $"Tag name: {tag.Name}, tag confidence in accuracy: {tag.Confidence}; ";
+                    }
+
+                //Captions  for the image
+                var captionInfo = "List of desciption captions found in the image. ";
+                if (analysis.Description.Captions.Count > 0)
+                    foreach (var descriptionCaption in analysis.Description.Captions)
+                    {
+                        captionInfo += $"Caption: {descriptionCaption.Text}; ";
+                    }
+
+                //Objects on the image
+                var objectsInfo = "List of objects detected on the image. ";
+                if (analysis.Objects.Count > 0)
+                    foreach (var objects in analysis.Objects)
+                    {
+                        objectsInfo += $"Object property: {objects.ObjectProperty}, object(h,w,x,y): {objects.Rectangle.H}, {objects.Rectangle.W}, {objects.Rectangle.X}, {objects.Rectangle.Y}; ";
+                    }
+
+                var brandsInfo = "List if brands detected on the image. ";
+                if (analysis.Brands.Count > 0)
+                    foreach (var brand in analysis.Brands)
+                    {
+                        brandsInfo += $"Brand: {brand.Name}; ";
+                    }
+
+                var categoriesInfo = "List of categories in the image. ";
+                if (analysis.Categories.Count > 0)
+                    foreach (var category in analysis.Categories)
+                    {
+                        categoriesInfo += $"Category name: {category.Name}; ";
+                    }
+
+                var colorsInfo = $"Colors information. Background color: {analysis.Color.DominantColorBackground}, foreground color: {analysis.Color.DominantColorForeground}, accent color: {analysis.Color.AccentColor}; ";
+
+                var detailedResult = $"Description: {captionInfo}, Tags: {tagInfo}, Objects: {objectsInfo}, Brands: {brandsInfo}, Categories: {categoriesInfo}, Colors: {colorsInfo}";
 
                 return detailedResult;
             }

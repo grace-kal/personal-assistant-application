@@ -41,6 +41,8 @@
         Shoes = 27,
 
         //Seasonal
-        Swimsuit = 28
+        Swimsuit = 28,
+
+        Unknown = 29
     }
 }

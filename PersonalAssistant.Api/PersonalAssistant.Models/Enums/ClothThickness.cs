@@ -4,6 +4,7 @@
     {
         Thin = 0,
         Medium = 1,
-        Thick = 2
+        Thick = 2,
+        Unknown = 3
     }
 }

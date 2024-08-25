@@ -5,6 +5,7 @@
         Mini = 0,
         Short = 1,
         Midi = 2,
-        Long = 3
+        Long = 3,
+        Unknown = 4
     }
 }
