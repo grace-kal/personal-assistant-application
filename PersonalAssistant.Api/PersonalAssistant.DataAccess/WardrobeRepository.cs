@@ -41,7 +41,7 @@ namespace PersonalAssistant.DataAccess
             var containerClient = blobServiceClient.GetBlobContainerClient(ContainerName);
             await containerClient.CreateIfNotExistsAsync();
 
-            var timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm:ss.fffZ");
+            var timestamp = DateTime.UtcNow.ToString("yyyy-MM-ddTHH-mm-ss-fffZ");
             var blobFileName = $"{newCloth.Id}_{timestamp}";
 
             var blobClient = containerClient.GetBlobClient(blobFileName);
