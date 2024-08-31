@@ -29,6 +29,12 @@ namespace PersonalAssistant.Api.Controllers
             return Ok(list);
         }
 
+        [HttpGet("GetEvent")]
+        public async Task<EventVM> GetEvent([FromQuery] string eventId)
+        {
+            return mapper.Map<EventVM>(await service.GetEvent(eventId));
+        }
+
         private IEnumerable<EventVM> MapEvents(IEnumerable<Event> allEventsFromDate)
         {
             var mapped = new List<EventVM>();

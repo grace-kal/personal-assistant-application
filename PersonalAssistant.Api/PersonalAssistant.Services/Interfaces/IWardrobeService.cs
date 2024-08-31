@@ -7,5 +7,6 @@ namespace PersonalAssistant.Services.Interfaces
     {
         Task CreateClothItems(Cloth newCloth, string email);
         Task<List<Cloth>> GetClothes(string email);
+        Task<Cloth> GetClothInfo(string email, int clothIdInt);
     }
 }

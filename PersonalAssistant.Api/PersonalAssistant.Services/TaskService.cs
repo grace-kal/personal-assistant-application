@@ -7,6 +7,12 @@ namespace PersonalAssistant.Services
 {
     public class TaskService(ITaskRepository repository, IUserService userService) : ITaskService
     {
+        public async System.Threading.Tasks.Task CreateTask(Task task, string email)
+        {
+            await repository.CreateTask(task, email);
+
+        }
+
         public async Task<IEnumerable<Task>> GetAllTasksForDate(DateTime date, string email)
         {
             if (!await userService.UserEmailExists(email))

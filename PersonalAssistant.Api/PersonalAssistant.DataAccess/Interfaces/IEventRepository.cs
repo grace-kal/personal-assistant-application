@@ -12,5 +12,6 @@ namespace PersonalAssistant.DataAccess.Interfaces
     {
         Task<IEnumerable<Event>> GetAllEventsForDate(DateTime date, string email);
         Task CreateEvent(Event newEvent, string email);
+        Task<Event> GetEvent(string eventId);
     }
 }

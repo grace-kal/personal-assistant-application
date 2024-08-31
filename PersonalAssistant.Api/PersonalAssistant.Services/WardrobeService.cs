@@ -16,5 +16,10 @@ namespace PersonalAssistant.Services
         {
             return await repository.GetClothes(email);
         }
+
+        public async Task<Cloth> GetClothInfo(string email, int clothIdInt)
+        {
+            return await repository.GetClothInfo(email,clothIdInt);
+        }
     }
 }

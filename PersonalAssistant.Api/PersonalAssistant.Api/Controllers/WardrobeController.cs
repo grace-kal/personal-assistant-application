@@ -55,6 +55,19 @@ namespace PersonalAssistant.Api.Controllers
             return MapClothes(await service.GetClothes(email));
         }
 
+        [HttpGet("GetClothInfo")]
+        public async Task<ClothVM> GetClothInfo([FromQuery] string email, string clothId)
+        {
+            Int32.TryParse(clothId, out var clothIdInt);
+            if (clothIdInt > 0)
+            {
+                var result = await service.GetClothInfo(email, clothIdInt);
+                return mapper.Map<ClothVM>(result);
+            }
+            return new ClothVM();
+        }
+
+
         private List<ClothVM> MapClothes(List<Cloth> clothes)
         {
             var list = new List<ClothVM>();

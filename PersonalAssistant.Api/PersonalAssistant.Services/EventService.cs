@@ -26,5 +26,10 @@ namespace PersonalAssistant.Services
 
             return await repository.GetAllEventsForDate(date, email);
         }
+
+        public async Task<Event> GetEvent(string eventId)
+        {
+            return await repository.GetEvent(eventId);
+        }
     }
 }

@@ -16,7 +16,7 @@ namespace PersonalAssistant.DataAccess
         {
             var allUserEvents = context.UserEvents
                 .Where(eu => eu.User.Email == email)
-                .Include(eu=>eu.Event)
+                .Include(eu => eu.Event)
                 .ToList();
 
             return GetEventsRangeContainingDate(allUserEvents, date);
@@ -30,8 +30,8 @@ namespace PersonalAssistant.DataAccess
 
                 var eventAdded = await context.Events.AddAsync(newEvent);
                 await context.SaveChangesAsync();
-                
-                if(eventAdded.Entity!=null)
+
+                if (eventAdded.Entity != null)
                 {
                     var userInvite = new UserEventInvite
                     {
@@ -49,6 +49,12 @@ namespace PersonalAssistant.DataAccess
                 //ignore
             }
 
+        }
+
+        public async Task<Event> GetEvent(string eventId)
+        {
+            Int32.TryParse(eventId, out var eventIdInt);
+            return await context.Events.FirstOrDefaultAsync(e => e.Id == eventIdInt);
         }
 
         private IEnumerable<Event> GetEventsRangeContainingDate(List<UserEventInvite> allUserEvents, DateTime date)

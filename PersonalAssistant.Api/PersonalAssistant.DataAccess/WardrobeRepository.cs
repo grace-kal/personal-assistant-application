@@ -23,7 +23,7 @@ namespace PersonalAssistant.DataAccess
             newCloth.UserId = user!.Id;
             var result = await context.Clothes.AddAsync(newCloth);
             await context.SaveChangesAsync();
-            
+
             newCloth.Id = result.Entity.Id;
             if (newCloth.Id != 0)
                 await SaveToBlobStorage(newCloth);
@@ -33,6 +33,13 @@ namespace PersonalAssistant.DataAccess
         {
             var user = await context.Users.FirstOrDefaultAsync(u => u.Email == email);
             var result = context.Clothes.Where(c => c.UserId == user.Id).ToList();
+            return result;
+        }
+
+        public async Task<Cloth> GetClothInfo(string email, int clothIdInt)
+        {
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var result = await context.Clothes.FirstOrDefaultAsync(c => c.Id == clothIdInt && c.UserId == user.Id);
             return result;
         }
 
