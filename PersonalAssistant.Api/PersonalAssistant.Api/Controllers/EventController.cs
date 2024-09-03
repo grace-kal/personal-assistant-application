@@ -35,24 +35,31 @@ namespace PersonalAssistant.Api.Controllers
             return mapper.Map<EventVM>(await service.GetEvent(eventId));
         }
 
-        private IEnumerable<EventVM> MapEvents(IEnumerable<Event> allEventsFromDate)
+        [HttpDelete("DeleteEvent")]
+        public async Task<ActionResult> DeleteEvent([FromQuery] string email, string eventId)
         {
-            var mapped = new List<EventVM>();
-            foreach (var e in allEventsFromDate)
+            await service.DeleteEvent(eventId);
+
+            return Ok();
+        }
+
+        [HttpPut("UpdateEvent")]
+        public async Task<ActionResult> UpdateEvent([FromQuery] string email, [FromBody] EventVM @event)
+        {
+            var eventType = mapper.Map<Event>(@event);
+            try
             {
-                var eVM = new EventVM()
-                {
-                    Id = e.Id.ToString(),
-                    Title = e.Title,
-                    Description = e.Description,
-                    StartDate = e.FromDateTime.Date.ToString("yyyy-MM-dd"),
-                    StartTime = e.FromDateTime.ToString("HH:mm"),
-                    EndDate = e.ToDateTime.Date.ToString("yyyy-MM-dd"),
-                    EndTime = e.ToDateTime.ToString("HH:mm")
-                };
-                mapped.Add(eVM);
+                eventType.FromDateTime = dateHelper.GetDateTimeFromJsonString(@event.StartDate, @event.StartTime);
+                eventType.ToDateTime = dateHelper.GetDateTimeFromJsonString(@event.EndDate, @event.EndTime);
             }
-            return mapped;
+            catch (Exception e)
+            {
+                //ignore
+            }
+            
+            await service.UpdateEvent(eventType, email);
+
+            return Ok();
         }
 
         [HttpPost("CreateEvent")]
@@ -78,5 +85,26 @@ namespace PersonalAssistant.Api.Controllers
             //Create UserEvent for each of the users with the returned id from the creation of event
             return Ok();
         }
+
+        private IEnumerable<EventVM> MapEvents(IEnumerable<Event> allEventsFromDate)
+        {
+            var mapped = new List<EventVM>();
+            foreach (var e in allEventsFromDate)
+            {
+                var eVM = new EventVM()
+                {
+                    Id = e.Id.ToString(),
+                    Title = e.Title,
+                    Description = e.Description,
+                    StartDate = e.FromDateTime.Date.ToString("yyyy-MM-dd"),
+                    StartTime = e.FromDateTime.ToString("HH:mm"),
+                    EndDate = e.ToDateTime.Date.ToString("yyyy-MM-dd"),
+                    EndTime = e.ToDateTime.ToString("HH:mm")
+                };
+                mapped.Add(eVM);
+            }
+            return mapped;
+        }
+
     }
 }

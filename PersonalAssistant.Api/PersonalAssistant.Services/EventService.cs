@@ -31,5 +31,19 @@ namespace PersonalAssistant.Services
         {
             return await repository.GetEvent(eventId);
         }
+
+        public async Task UpdateEvent(Event @event, string email)
+        {
+            if (!await userService.UserEmailExists(email))
+            {
+                throw new BadHttpRequestException("No such user email registered");
+            }
+            await repository.UpdateEvent(@event, email);
+        }
+
+        public async Task DeleteEvent(string eventId)
+        {
+            await repository.DeleteEvent(eventId);
+        }
     }
 }
