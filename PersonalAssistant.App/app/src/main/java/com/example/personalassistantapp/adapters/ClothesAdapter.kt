@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide
 import com.example.personalassistantapp.databinding.ItemClothBinding
 import com.example.personalassistantapp.models.Cloth
 
-class ClothesAdapter(private var clothes: List<Cloth>) :
+class ClothesAdapter(private var clothes: List<Cloth>, private val onItemClick: (Int) -> Unit) :
     RecyclerView.Adapter<ClothesAdapter.ViewHolder>() {
 
     class ViewHolder(val binding: ItemClothBinding) : RecyclerView.ViewHolder(binding.root)
@@ -27,6 +27,10 @@ class ClothesAdapter(private var clothes: List<Cloth>) :
         Glide.with(holder.itemView.context)
             .load(cloth.imageUrl)
             .into(holder.binding.clothImageView)
+
+        holder.itemView.setOnClickListener {
+            onItemClick(cloth.id)
+        }
     }
 
     override fun getItemCount(): Int = clothes.size

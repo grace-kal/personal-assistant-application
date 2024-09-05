@@ -47,6 +47,9 @@
         android:label="@string/menu_wardrobe"
         tools:layout="@layout/fragment_wardrobe">
         <action
+            android:id="@+id/action_wardrobeFragment_to_clothInfoFragment"
+            app:destination="@id/clothInfoFragment" />
+        <action
             android:id="@+id/action_wardrobeFragment_to_addClothFragment"
             app:destination="@id/addClothFragment" />
     </fragment>
@@ -59,6 +62,14 @@
         <action
             android:id="@+id/action_addClothFragment_to_wardrobeFragment"
             app:destination="@id/nav_wardrobe" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/clothInfoFragment"
+        android:name="com.example.personalassistantapp.ui.wardrobe.ClothInfoFragment">
+        <argument
+            android:name="clothId"
+            app:argType="integer" />
     </fragment>
 
     <fragment

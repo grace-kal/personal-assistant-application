@@ -43,7 +43,11 @@ class WardrobeFragment : Fragment() {
         _tokenManager = TokenManager(requireContext())
 
         clothesList = mutableListOf()
-        adapter = ClothesAdapter(clothesList)
+
+        adapter = ClothesAdapter(clothesList) { clothId ->
+            val action = WardrobeFragmentDirections.actionWardrobeFragmentToClothInfoFragment(clothId)
+            findNavController().navigate(action)
+        }
 
         binding.clothesList.layoutManager = LinearLayoutManager(context)
         binding.clothesList.adapter = adapter

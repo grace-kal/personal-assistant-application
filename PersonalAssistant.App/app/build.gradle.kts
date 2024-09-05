@@ -1,9 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-//    kotlin("plugin.lombok") version "1.8.10"
-//    id("io.freefair.lombok") version "5.3.0"
-//    id ("org.jetbrains.kotlin.plugin.lombok") version "1.8.0"
+    id("androidx.navigation.safeargs.kotlin") version "2.5.0" // VERSION FOR SAFE ARGS PLUGIN
 }
 
 android {
@@ -39,6 +37,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.navigation.fragment.ktx.v270)
+    implementation(libs.androidx.navigation.ui.ktx.v270)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -46,10 +46,7 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.navigation.fragment.ktx)
-    implementation(libs.androidx.navigation.ui.ktx)
-    implementation (libs.jwtdecode)
-//    Lombok
+    implementation(libs.jwtdecode)
     implementation(libs.lombok.v11830)
     implementation(libs.androidx.activity)
     runtimeOnly(libs.kotlinx.coroutines.android)
@@ -57,10 +54,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
-//    Lombok
-    annotationProcessor (libs.projectlombok.lombok)
-    implementation (libs.glide)
-    annotationProcessor (libs.compiler)
-
-
+    implementation(libs.glide)
+    annotationProcessor(libs.projectlombok.lombok)
+    annotationProcessor(libs.compiler)
 }
