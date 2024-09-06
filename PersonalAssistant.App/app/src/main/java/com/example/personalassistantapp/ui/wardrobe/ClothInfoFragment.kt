@@ -23,10 +23,12 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import okhttp3.internal.notify
+import okhttp3.internal.notifyAll
 import org.json.JSONObject
 import java.io.IOException
 
-class ClothInfoFragment: Fragment()  {
+class ClothInfoFragment : Fragment() {
     private var _binding: FragmentClothInfoBinding? = null
     private val binding get() = _binding!!
     private lateinit var _tokenManager: TokenManager
@@ -67,8 +69,12 @@ class ClothInfoFragment: Fragment()  {
 
 
     private fun fetchCloth() {
-        val baseUrl = ApiRequestHelper.HOSTADDRESS + ApiRequestHelper.WARDROBECONTROLLER + ApiRequestHelper.GET_CLOTH_INFO_ENDPOINT_WARDROBECONTROLLER
-        val urlString = ApiRequestHelper.valuesBuilder(baseUrl, "email=${_tokenManager.getEmailFromToken()}&clothId=$clothId")
+        val baseUrl =
+            ApiRequestHelper.HOSTADDRESS + ApiRequestHelper.WARDROBECONTROLLER + ApiRequestHelper.GET_CLOTH_INFO_ENDPOINT_WARDROBECONTROLLER
+        val urlString = ApiRequestHelper.valuesBuilder(
+            baseUrl,
+            "email=${_tokenManager.getEmailFromToken()}&clothId=$clothId"
+        )
 
         // Make API request
         lifecycleScope.launch(Dispatchers.IO) {
@@ -99,27 +105,33 @@ class ClothInfoFragment: Fragment()  {
     private fun parseJsonCloth(jsonObject: JSONObject): Cloth {
         return Cloth(
             id = jsonObject.optInt("id", 0),
-            title = jsonObject.optString("title", ""),
-            description = jsonObject.optString("descriptionUser", ""),
-            imageUrl = jsonObject.optString("blobUri", ""),
-            color = jsonObject.optString("color", ""),
-            season = jsonObject.optString("season", ""),
-            weatherKind = jsonObject.optString("weatherKind", ""),
-            kind = jsonObject.optString("clothKind", ""),
-            area = jsonObject.optString("clothArea", ""),
-            length = jsonObject.optString("clothLength", ""),
-            thickness = jsonObject.optString("clothThickness", "")
+            title = jsonObject.optString("title", "N/A"),
+            description = jsonObject.optString("description", "N/A"),
+            imageUrl = jsonObject.optString("blobUri", "N/A"),
+            color = jsonObject.optString("color", "N/A"),
+            season = jsonObject.optString("season", "N/A"),
+            weatherKind = jsonObject.optString("weatherKind", "N/A"),
+            kind = jsonObject.optString("clothKind", "N/A"),
+            area = jsonObject.optString("clothArea", "N/A"),
+            length = jsonObject.optString("clothLength", "N/A"),
+            thickness = jsonObject.optString("clothThickness", "N/A")
         )
     }
 
     private fun populateUI(cloth: Cloth) {
-//        binding.clothTitle.text = cloth.title
-//        binding.clothDescription.text = cloth.description
-//        binding.clothColor.text = cloth.color
-//
-//        Glide.with(this)
-//            .load(cloth.imageUrl)
-//            .into(binding.clothImage)
+        binding.clothTitle.text = cloth.title
+        binding.clothDescription.text = cloth.description
+        binding.clothColor.text = cloth.color
+        binding.clothSeason.text = cloth.season
+        binding.clothThickness.text = cloth.thickness
+        binding.clothLenght.text = cloth.length
+        binding.clothArea.text = cloth.area
+        binding.clothKind.text = cloth.kind
+        binding.weatherKind.text = cloth.weatherKind
+
+        Glide.with(this)
+            .load(cloth.imageUrl)
+            .into(binding.clothImage)
     }
 
     private fun deleteCloth(id: Int) {
@@ -129,7 +141,7 @@ class ClothInfoFragment: Fragment()  {
     override fun onDestroy() {
         super.onDestroy()
         super.onDestroyView()
-            Log.d("ClothInfoFragment", "onDestroyView")
+        Log.d("ClothInfoFragment", "onDestroyView")
 
     }
 }
