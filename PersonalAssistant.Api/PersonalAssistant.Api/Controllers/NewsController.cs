@@ -10,7 +10,7 @@ namespace PersonalAssistant.Api.Controllers
     public class NewsController(HttpClient client) : Controller
     {
         [HttpGet("LatestNews")]
-        public async Task<NewsApiResponse?> LatestNews()
+        public async Task<List<NewsVM>> LatestNews()
         {
             //Env var TODO add
             //string is in https://newsdata.io/api-key
@@ -25,7 +25,11 @@ namespace PersonalAssistant.Api.Controllers
 
                 var newsData = JsonConvert.DeserializeObject<NewsApiResponse>(jsonResponse);
 
-                return newsData;
+                if (newsData?.Results != null)
+                {
+                   
+                    return newsData.Results;
+                }
             }
 
             return null;

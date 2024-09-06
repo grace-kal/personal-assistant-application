@@ -90,7 +90,10 @@ class NewsFragment : Fragment() {
                 title = jsonObject.optString("title"),
                 description = jsonObject.optString("description"),
                 pubDate = jsonObject.optString("pubDate"),
-                imageUrl = jsonObject.optString("image_url")
+                imageUrl = jsonObject.optString("imagerUrl"),
+//                creator = jsonObject.optString("author") ,
+                sourceUrl = jsonObject.optString("sourceUrl"),
+                sourceIcon = jsonObject.optString("sourceIcon")
             )
             list.add(new)
         }
