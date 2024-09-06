@@ -11,6 +11,7 @@ public class ApiRequestHelper {
     public static final String CHATSCONTROLLER = "/Chat";
     public static final String WARDROBECONTROLLER = "/Wardrobe";
     public static final String WEATHERCONTROLLER = "/Weather";
+    public static final String NEWSCONTROLLER = "/News";
 
 
     //    User controller methods
@@ -39,6 +40,9 @@ public class ApiRequestHelper {
     public static final String ADD_NEW_CLOTH_ENDPOINT_WARDROBECONTROLLER = "/AddNewCloth";
     public static final String GET_CLOTHES_ENDPOINT_WARDROBECONTROLLER = "/GetClothes";
     public static final String GET_CLOTH_INFO_ENDPOINT_WARDROBECONTROLLER = "/GetClothInfo";
+
+    //News controller methods
+    public static final String LATEST_NEWS_NEWSCONTROLLER = "/LatestNews";
 
 
     public static String urlBuilder(String controller, String method) {

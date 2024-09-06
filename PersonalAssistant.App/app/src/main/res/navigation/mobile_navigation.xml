@@ -74,9 +74,9 @@
 
     <fragment
         android:id="@+id/nav_news"
-        android:name="com.example.personalassistantapp.ui.slideshow.SlideshowFragment"
+        android:name="com.example.personalassistantapp.ui.news.NewsFragment"
         android:label="@string/menu_news"
-        tools:layout="@layout/fragment_slideshow" />
+        tools:layout="@layout/fragment_news" />
 
     <fragment
         android:id="@+id/nav_contact_support"
