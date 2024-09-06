@@ -27,7 +27,7 @@ builder.Services.AddSingleton(new ComputerVisionClient(new ApiKeyServiceClientCr
 var blobConnectionString = Environment.GetEnvironmentVariable("STORAGE_CONNECTION_STRING");
 builder.Services.AddSingleton(new BlobServiceClient(blobConnectionString));
 
-
+builder.Services.AddHttpClient();
 builder.Services.AddControllers();
 
 //Env var TODO add
