@@ -31,7 +31,7 @@ class NewsFragment : Fragment() {
     private val _client = OkHttpClient()
 
     private lateinit var adapter: NewsAdapter
-    private val news = MutableLiveData<List<News>>()
+    private val _news = MutableLiveData<List<News>>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,12 +39,14 @@ class NewsFragment : Fragment() {
     ): View? {
         _binding = FragmentNewsBinding.inflate(inflater, container, false)
         adapter = NewsAdapter(emptyList())
+
+        fetchNews()
+
         binding.newsList.adapter = adapter
 
-        news.observe(viewLifecycleOwner) { newss ->
+        _news.observe(viewLifecycleOwner) { newss ->
             adapter.updateData(newss)
         }
-        fetchNews()
 
         val root: View = binding.root
         return root
@@ -68,7 +70,7 @@ class NewsFragment : Fragment() {
                     if (jsonArray.length() > 0) {
                         val newsList = parseJsonNewsList(jsonArray) // Adjust parsing function
                         withContext(Dispatchers.Main) {
-                            news.value = newsList
+                            _news.value = newsList
                             adapter.notifyDataSetChanged()
                         }
                     }
@@ -90,7 +92,7 @@ class NewsFragment : Fragment() {
                 title = jsonObject.optString("title"),
                 description = jsonObject.optString("description"),
                 pubDate = jsonObject.optString("pubDate"),
-                imageUrl = jsonObject.optString("imagerUrl"),
+                imageUrl = jsonObject.optString("imageUrl"),
 //                creator = jsonObject.optString("author") ,
                 sourceUrl = jsonObject.optString("sourceUrl"),
                 sourceIcon = jsonObject.optString("sourceIcon")
